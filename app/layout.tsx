@@ -3,6 +3,13 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
+import { Inter } from 'next/font/google'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
+
+import { headers } from 'next/headers'
+import ContextProvider from '@/context'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -25,19 +32,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookies = headers().get('cookie')
+
   return (
     <html lang="en" className="light">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex  bg-background">
-          <SidebarProvider>
+        <div className="flex">
+          <SidebarProvider className='w-30'>
             <AppSidebar />
-            <main>
-              <SidebarTrigger />
-              {children}
-            </main>
+            <SidebarTrigger />
           </SidebarProvider>
+          <ContextProvider cookies={cookies}>{children}</ContextProvider>
         </div>
       </body>
     </html>
