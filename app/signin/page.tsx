@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { useAccount } from "wagmi"
 
 export default function Signup() {
   return (
@@ -41,7 +40,6 @@ export default function Signup() {
 
                 <div className="flex items-center justify-between">
                   <Label htmlFor="wallet">지갑 연결</Label>
-                  <w3m-button />
                 </div>
 
                 <div className="flex items-center space-x-2">

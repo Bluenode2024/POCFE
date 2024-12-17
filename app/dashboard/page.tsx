@@ -94,7 +94,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Button
                             size="sm"
-                            onClick={() => router.push(`/projectdetail`)}
+                            onClick={() =>
+                              router.push(`/projectdetail/${project.id}`)
+                            }
                           >
                             Project Detail
                           </Button>

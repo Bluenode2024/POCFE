@@ -38,10 +38,6 @@ const data = {
           url: 'dashboard',
         },
         {
-          title: 'Users',
-          url: 'my',
-        },
-        {
           title: 'Settings',
           url: 'admin',
         },
@@ -54,7 +50,7 @@ const data = {
       items: [
         {
           title: 'Profile',
-          url: '#',
+          url: 'my',
         },
         {
           title: 'Activities',
@@ -117,6 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
+        <appkit-button balance="hide" size='sm'/>
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>

@@ -3,7 +3,7 @@
 import { wagmiAdapter, projectId } from '@/config'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createAppKit } from '@reown/appkit/react'
-import { mainnet, arbitrum } from '@reown/appkit/networks'
+import { mainnet, arbitrum, solana } from '@reown/appkit/networks'
 import React, { type ReactNode } from 'react'
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 
@@ -23,11 +23,19 @@ const metadata = {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [mainnet, arbitrum],
+  networks: [mainnet, arbitrum, solana],
   defaultNetwork: mainnet,
   metadata: metadata,
   features: {
     analytics: true
+  },
+  tokens: {
+    "eip155:1": {
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    },
+    "eip155:137": {
+      address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    }
   },
   themeMode: 'light'
 })
