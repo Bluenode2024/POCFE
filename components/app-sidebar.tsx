@@ -38,7 +38,7 @@ const data = {
           url: 'dashboard',
         },
         {
-          title: 'Settings',
+          title: 'Admin',
           url: 'admin',
         },
       ],
