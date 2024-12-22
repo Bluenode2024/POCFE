@@ -12,9 +12,13 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
+import { useWriteContract } from "wagmi";
+import BNS_ABI from '@/abi/BNS.abi';
 
 export default function ProjectDetailPage() {
+  const { writeContract } = useWriteContract()
+  const BNS_ADDRESS = '0x323A1dEDCa9e3FeCb37A8aAa3febb1f36e2463F8';
+
   const projectId = "1";
 
   const filteredTasks = tasks.filter((task) => task.id === projectId);
@@ -47,7 +51,17 @@ export default function ProjectDetailPage() {
                   <TableCell>{task.address}</TableCell>
                   <TableCell>
                     <Button
-                      size="sm"
+                      onClick={() => 
+                        writeContract({ 
+                          abi: BNS_ABI,
+                          address: BNS_ADDRESS,
+                          functionName: 'transfer',
+                          args: [
+                            task.address,
+                            task.priority
+                          ],
+                       })
+                      }
                     >
                       Send to contract
                     </Button>
