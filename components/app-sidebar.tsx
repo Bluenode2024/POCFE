@@ -44,6 +44,21 @@ const data = {
       ],
     },
     {
+      title: 'Validator',
+      url: '#',
+      icon: Settings,
+      items: [
+        {
+          title: 'Dashboard',
+          url: 'dashboard',
+        },
+        {
+          title: 'Validator',
+          url: 'validator',
+        },
+      ],
+    },
+    {
       title: 'My',
       url: '#',
       icon: User,
