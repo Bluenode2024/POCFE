@@ -21,9 +21,13 @@ export default function ProjectDetailPage() {
     2: "Progressing",
     3: "Completed",
   };
-  const taskResults = {
-    1: "Rewarded",
-    2: "Slashed",
+
+  // Status에 따른 Result 계산 함수
+  const getResultFromStatus = (status) => {
+    if (status === "Pending") return "Slashed";
+    if (status === "Progressing") return "-";
+    if (status === "Completed") return "Rewarded";
+    return "-";
   };
 
   return (
@@ -74,24 +78,29 @@ export default function ProjectDetailPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTasks.map((task) => (
-                <TableRow key={task.id}>
-                  <TableCell>{task.id}</TableCell>
-                  <TableCell>{task.name}</TableCell>
-                  <TableCell>{task.address}</TableCell>
-                  <TableCell>{taskStatuses[task.id] || "Pending"}</TableCell>
-                  <TableCell>{taskResults[task.id] || "Rewarded"}</TableCell>
-                  <TableCell>
-                    {task.detail}
-                    <Button
-                      className="ml-4"
-                      onClick={() => console.log(`Viewing log for Task ID: ${task.id}`)}
-                    >
-                      View Log
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredTasks.map((task) => {
+                const status = taskStatuses[task.id] || "Pending";
+                const result = getResultFromStatus(status);
+
+                return (
+                  <TableRow key={task.id}>
+                    <TableCell>{task.id}</TableCell>
+                    <TableCell>{task.name}</TableCell>
+                    <TableCell>{task.address}</TableCell>
+                    <TableCell>{status}</TableCell>
+                    <TableCell>{result}</TableCell>
+                    <TableCell>
+                      {task.detail}
+                      <Button
+                        className="ml-4"
+                        onClick={() => console.log(`Viewing log for Task ID: ${task.id}`)}
+                      >
+                        View Log
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
