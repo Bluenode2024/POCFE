@@ -50,7 +50,7 @@ const data = {
       items: [
         {
           title: 'Dashboard',
-          url: 'dashboard',
+          url: 'dash2',
         },
         {
           title: 'Validator',

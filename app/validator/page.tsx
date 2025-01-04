@@ -1,8 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { tasks } from "@/task/index";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,58 +10,84 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
-import { useWriteContract } from "wagmi";
-import BNS_ABI from '@/abi/BNS.abi';
 
 export default function ProjectDetailPage() {
-  const { writeContract } = useWriteContract()
-  const BNS_ADDRESS = '0x323A1dEDCa9e3FeCb37A8aAa3febb1f36e2463F8';
-
   const projectId = "1";
-
   const filteredTasks = tasks.filter((task) => task.id === projectId);
 
+  // 예제 데이터
+  const taskStatuses = {
+    1: "Pending",
+    2: "Progressing",
+    3: "Completed",
+  };
+  const taskResults = {
+    1: "Rewarded",
+    2: "Slashed",
+  };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-8">
 
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold">Validator page</h2>
+        {/* 새로 추가된 Task Table */}
+        <div className="border border-black p-4 rounded-lg">
+          <h2 className="text-xl font-bold mb-4">Task Overview</h2>
           <Table className="w-full">
             <TableHeader>
               <TableRow>
                 <TableHead>Task ID</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Deadline</TableHead>
-                <TableHead>Priority</TableHead>
                 <TableHead>Address</TableHead>
-                <TableHead>Send to contract</TableHead>
+                <TableHead>Report</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredTasks.map((task) => (
-                <TableRow key={task.name}>
+                <TableRow key={task.id}>
                   <TableCell>{task.id}</TableCell>
                   <TableCell>{task.name}</TableCell>
-                  <TableCell>{task.deadline}</TableCell>
-                  <TableCell>{task.priority}</TableCell>
                   <TableCell>{task.address}</TableCell>
                   <TableCell>
+                    <Button onClick={() => console.log(`Submitting report for Task ID: ${task.id}`)}>
+                      Submit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* 기존 테이블 유지 */}
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Task Details</h2>
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Task ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Result</TableHead>
+                <TableHead>Detail</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredTasks.map((task) => (
+                <TableRow key={task.id}>
+                  <TableCell>{task.id}</TableCell>
+                  <TableCell>{task.name}</TableCell>
+                  <TableCell>{task.address}</TableCell>
+                  <TableCell>{taskStatuses[task.id] || "Pending"}</TableCell>
+                  <TableCell>{taskResults[task.id] || "Rewarded"}</TableCell>
+                  <TableCell>
+                    {task.detail}
                     <Button
-                      onClick={() => 
-                        writeContract({ 
-                          abi: BNS_ABI,
-                          address: BNS_ADDRESS,
-                          functionName: 'transfer',
-                          args: [
-                            task.address,
-                            task.priority
-                          ],
-                       })
-                      }
+                      className="ml-4"
+                      onClick={() => console.log(`Viewing log for Task ID: ${task.id}`)}
                     >
-                      Send to contract
+                      View Log
                     </Button>
                   </TableCell>
                 </TableRow>
