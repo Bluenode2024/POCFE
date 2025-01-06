@@ -1,16 +1,10 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import {
-  Command,
-  User,
-  Briefcase,
-  LogIn,
-  Settings,
-} from 'lucide-react';
+import * as React from "react";
+import { Command, User, Briefcase, LogIn, Settings } from "lucide-react";
 
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -19,86 +13,90 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
-    name: 'Admin User',
-    email: 'admin@example.com',
-    avatar: '/avatars/admin.jpg',
+    name: "Admin User",
+    email: "admin@example.com",
+    avatar: "/avatars/admin.jpg",
   },
   navMain: [
     {
-      title: 'Admin',
-      url: '#',
+      title: "Admin",
+      url: "#",
       icon: Settings,
       items: [
         {
-          title: 'Dashboard',
-          url: 'dashboard',
+          title: "Dashboard",
+          url: "dashboard",
         },
         {
-          title: 'Admin',
-          url: 'admin',
+          title: "Admin",
+          url: "admin",
         },
       ],
     },
     {
-      title: 'Validator',
-      url: '#',
+      title: "Validator",
+      url: "#",
       icon: Settings,
       items: [
         {
-          title: 'Dashboard',
-          url: 'dash2',
+          title: "Dashboard",
+          url: "dash2",
         },
         {
-          title: 'Validator',
-          url: 'validator',
+          title: "Validator",
+          url: "validator",
         },
       ],
     },
     {
-      title: 'My',
-      url: '#',
+      title: "My",
+      url: "#",
       icon: User,
       items: [
         {
-          title: 'Profile',
-          url: 'my',
+          title: "Profile",
+          url: "my",
         },
         {
-          title: 'Activities',
-          url: '#',
+          title: "Activities",
+          url: "#",
         },
         {
-          title: 'Settings',
-          url: '#',
+          title: "Settings",
+          url: "#",
         },
       ],
     },
     {
-      title: 'Project',
-      url: '#',
+      title: "Project",
+      url: "#",
       icon: Briefcase,
       items: [
         {
-          title: 'Overview',
-          url: 'project',
+          title: "Overview",
+          url: "project",
         },
         {
-          title: 'Tasks',
-          url: '#',
+          title: "Tasks",
+          url: "#",
         },
         {
-          title: 'Reports',
-          url: '#',
+          title: "Generate",
+          url: "generate",
+        },
+        {
+          title: "Reports",
+          url: "#",
         },
       ],
     },
     {
-      title: 'Sign In',
-      url: 'signin',
+      title: "Sign In",
+      url: "signin",
       icon: LogIn,
     },
   ],
@@ -128,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <appkit-button balance="hide" size='sm'/>
+        <appkit-button balance="hide" size="sm" />
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>

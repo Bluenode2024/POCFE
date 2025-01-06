@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { projects as projectData } from "@/projects";
@@ -18,24 +17,24 @@ import {
 export default function Dashboard() {
   const router = useRouter();
   const [projects] = useState(projectData);
- 
+
   const ongoingProjects = projects.filter(
     (project) => project.status === "Processing"
   );
 
-  // Sample data calculations for task and amount
+  /* Sample data calculations for task and amount
   const taskSummary = {
-    succeed: ongoingProjects.reduce((sum, p) => sum + (p.tasks?.succeed || 0), 0),
-    pended: ongoingProjects.reduce((sum, p) => sum + (p.tasks?.pended || 0), 0),
+  succeed: ongoingProjects.reduce((sum, p) => sum + (p.tasks?.succeed || 0), 0),
+  pended: ongoingProjects.reduce((sum, p) => sum + (p.tasks?.pended || 0), 0),
   };
   taskSummary.total = taskSummary.succeed + taskSummary.pended;
 
   const amountSummary = {
-    deposit: ongoingProjects.reduce((sum, p) => sum + (p.amount?.deposit || 0), 0),
-    rewarded: ongoingProjects.reduce((sum, p) => sum + (p.amount?.rewarded || 0), 0),
-    slashed: ongoingProjects.reduce((sum, p) => sum + (p.amount?.slashed || 0), 0),
+  deposit: ongoingProjects.reduce((sum, p) => sum + (p.amount?.deposit || 0), 0),
+  rewarded: ongoingProjects.reduce((sum, p) => sum + (p.amount?.rewarded || 0), 0),
+  slashed: ongoingProjects.reduce((sum, p) => sum + (p.amount?.slashed || 0), 0),
   };
-  amountSummary.total = amountSummary.deposit + amountSummary.rewarded - amountSummary.slashed;
+  amountSummary.total = amountSummary.deposit + amountSummary.rewarded - amountSummary.slashed; */
 
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
@@ -58,15 +57,15 @@ export default function Dashboard() {
                   <TableBody>
                     <TableRow>
                       <TableCell>Succeed</TableCell>
-                      <TableCell>{taskSummary.succeed}</TableCell>
+                      {/*<TableCell>{taskSummary.succeed}</TableCell>*/}
                     </TableRow>
                     <TableRow>
                       <TableCell>Pended</TableCell>
-                      <TableCell>{taskSummary.pended}</TableCell>
+                      {/*<TableCell>{taskSummary.pended}</TableCell>*/}
                     </TableRow>
                     <TableRow>
                       <TableCell>Total</TableCell>
-                      <TableCell>{taskSummary.total}</TableCell>
+                      {/*<TableCell>{taskSummary.total}</TableCell>*/}
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -82,19 +81,19 @@ export default function Dashboard() {
                   <TableBody>
                     <TableRow>
                       <TableCell>Deposit</TableCell>
-                      <TableCell>{amountSummary.deposit}</TableCell>
+                      {/*<TableCell>{amountSummary.deposit}</TableCell>*/}
                     </TableRow>
                     <TableRow>
                       <TableCell>Rewarded</TableCell>
-                      <TableCell>{amountSummary.rewarded}</TableCell>
+                      {/*<TableCell>{amountSummary.rewarded}</TableCell>*/}
                     </TableRow>
                     <TableRow>
                       <TableCell>Slashed</TableCell>
-                      <TableCell>{amountSummary.slashed}</TableCell>
+                      {/*<TableCell>{amountSummary.slashed}</TableCell>*/}
                     </TableRow>
                     <TableRow>
                       <TableCell>Total</TableCell>
-                      <TableCell>{amountSummary.total}</TableCell>
+                      {/*<TableCell>{amountSummary.total}</TableCell>*/}
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -104,8 +103,11 @@ export default function Dashboard() {
         </div>
 
         <div className="flex justify-start p-4">
-          <Button size="sm" className="bg-blue-500 text-white h-10 w-40"
-          onClick={() => router.push("validator")}>
+          <Button
+            size="sm"
+            className="bg-blue-500 text-white h-10 w-40"
+            onClick={() => router.push("validator")}
+          >
             View Details
           </Button>
         </div>
