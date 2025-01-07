@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Command, User, Briefcase, LogIn, Settings } from "lucide-react";
+import { Command, User, Briefcase, LogIn, Settings, Home, ShieldCheck } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -23,32 +23,49 @@ const data = {
   },
   navMain: [
     {
+      title: "Home",
+      url: "/", // 절대 경로로 설정
+      icon: Home,
+    },
+    {
       title: "Admin",
       url: "#",
       icon: Settings,
       items: [
         {
-          title: "Dashboard",
-          url: "dashboard",
+          title: "User Management",
+          url: "/admin/user", // 절대 경로
         },
         {
-          title: "Admin",
-          url: "admin",
+          title: "Reports",
+          url: "/admin/report", // 절대 경로
+        },
+        {
+          title: "Projects",
+          url: "/admin/project", // 절대 경로
+        },
+        {
+          title: "Epoch",
+          url: "/admin/epoch", // 절대 경로
+        },
+        {
+          title: "POC",
+          url: "/admin/POC", // 절대 경로
         },
       ],
     },
     {
       title: "Validator",
       url: "#",
-      icon: Settings,
+      icon: ShieldCheck,
       items: [
         {
-          title: "Dashboard",
-          url: "dash2",
+          title: "Overview",
+          url: "/validator/overview", // 절대 경로
         },
         {
-          title: "Validator",
-          url: "validator",
+          title: "My Validate",
+          url: "/validator/my_validate", // 절대 경로
         },
       ],
     },
@@ -58,16 +75,12 @@ const data = {
       icon: User,
       items: [
         {
-          title: "Profile",
-          url: "my",
+          title: "User Info",
+          url: "/my/user_info", // 절대 경로
         },
         {
-          title: "Activities",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
+          title: "Claim",
+          url: "/my/claim", // 절대 경로
         },
       ],
     },
@@ -77,26 +90,14 @@ const data = {
       icon: Briefcase,
       items: [
         {
-          title: "Overview",
-          url: "project",
-        },
-        {
-          title: "Tasks",
-          url: "#",
-        },
-        {
-          title: "Generate",
-          url: "generate",
-        },
-        {
-          title: "Reports",
-          url: "#",
+          title: "Dashboard",
+          url: "/project/dashboard", // 절대 경로
         },
       ],
     },
     {
       title: "Sign In",
-      url: "signin",
+      url: "/signin", // 절대 경로
       icon: LogIn,
     },
   ],
@@ -109,7 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>

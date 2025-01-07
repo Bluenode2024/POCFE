@@ -95,7 +95,7 @@ export default function Dashboard() {
                           <Button
                             size="sm"
                             onClick={() =>
-                              router.push(`/projectdetail/${project.id}`)
+                              router.push(`/project/projectdetail/${project.id}`)
                             }
                           >
                             Project Detail

@@ -29,16 +29,16 @@ export default function Signup() {
     const formData = new FormData(event.currentTarget);
     const data = {
       username: formData.get("username") as string,
-      fullName: "JihoPark",
+      fullName: "Jiho",
       department: formData.get("department") as string,
-      walletAddress: "0x2234567890123456789012345678901234567891",
+      walletAddress: "0x2234567890123456789012345678901234567897",
       studentId: formData.get("studentId") as string,
     };
   
     console.log("전송 데이터:", data);
   
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      const response = await fetch("http://localhost:3001/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
