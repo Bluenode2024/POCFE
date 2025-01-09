@@ -13,63 +13,56 @@ import {
   TableHeader,
 } from "@/components/ui/table";
 import { useWriteContract } from "wagmi";
-import BNS_ABI from '@/abi/BNS.abi';
+import BNS_ABI from "@/abi/BNS.abi";
+import { useEffect, useState } from "react";
+import { Admin_Project, adminpjcolumns } from "../../column";
+import { DataTable } from "../../data-table";
+
+async function getData(): Promise<Admin_Project[]> {
+  return [
+    {
+      ProjectID: "1",
+      Name: "위메이드 프론트 개발",
+      Deadline: "2024.01.18 00:00",
+      Detail: "Detail",
+    },
+    {
+      ProjectID: "2",
+      Name: "위메이드 백 개발",
+      Deadline: "2024.01.22 00:00",
+      Detail: "Detail",
+    },
+    {
+      ProjectID: "3",
+      Name: "위메이드 컨트랙트 개발",
+      Deadline: "2024.01.30 00:00",
+      Detail: "Detail",
+    },
+  ];
+}
 
 export default function ProjectDetailPage() {
-  const { writeContract } = useWriteContract()
-  const BNS_ADDRESS = '0x323A1dEDCa9e3FeCb37A8aAa3febb1f36e2463F8';
-
-  const projectId = "1";
-
-  const filteredTasks = tasks.filter((task) => task.id === projectId);
-
+  const [data, setData] = useState<Admin_Project[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getData();
+      setData(result);
+    }
+    fetchData();
+  }, []);
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold">Admin page</h2>
-          <Table className="w-full">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Task ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Deadline</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Send to contract</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTasks.map((task) => (
-                <TableRow key={task.name}>
-                  <TableCell>{task.id}</TableCell>
-                  <TableCell>{task.name}</TableCell>
-                  <TableCell>{task.deadline}</TableCell>
-                  <TableCell>{task.priority}</TableCell>
-                  <TableCell>{task.address}</TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => 
-                        writeContract({ 
-                          abi: BNS_ABI,
-                          address: BNS_ADDRESS,
-                          functionName: 'transfer',
-                          args: [
-                            task.address,
-                            task.priority
-                          ],
-                       })
-                      }
-                    >
-                      Send to contract
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+    <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-7xl">
+        <div className="p-4">
+          <Card className="w-full rounded-lg shadow-md">
+            <CardHeader>
+              <CardTitle>Admin Project</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DataTable columns={adminpjcolumns} data={data} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
