@@ -28,18 +28,21 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="light">
-      <body
-        className={`antialiased `}
-      >
-        <div className="flex">
-          <SidebarProvider className="w-30">
+      <body className="antialiased">
+        <div className="flex min-h-screen">
+          <SidebarProvider className="w-64">
             <AppSidebar />
             <SidebarTrigger />
           </SidebarProvider>
 
-          <ContextProvider cookies={cookies}>{children}</ContextProvider>
+          <main className="flex-1 flex flex-col overflow-auto bg-gray-100">
+            <ContextProvider cookies={cookies}>
+              {children}
+            </ContextProvider>
+          </main>
         </div>
       </body>
     </html>
   );
 }
+

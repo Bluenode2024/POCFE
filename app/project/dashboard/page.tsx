@@ -110,7 +110,12 @@ export default function Dashboard() {
           </div>
 
           <div className="flex-[1] flex items-center justify-center">
-            <Button size="sm" className="bg-blue-500 text-white h-10 w-40">
+            <Button 
+            size="sm" className="bg-blue-500 text-white h-10 w-40"
+            onClick={() =>
+              router.push(`/project/generate`)
+            }
+            >
               프로젝트 생성하기
             </Button>
           </div>

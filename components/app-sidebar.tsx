@@ -24,7 +24,7 @@ const data = {
   navMain: [
     {
       title: "Home",
-      url: "/", // 절대 경로로 설정
+      url: "/", 
       icon: Home,
     },
     {
@@ -34,23 +34,23 @@ const data = {
       items: [
         {
           title: "User Management",
-          url: "/admin/user", // 절대 경로
+          url: "/admin/user",
         },
         {
           title: "Reports",
-          url: "/admin/report", // 절대 경로
+          url: "/admin/report",
         },
         {
           title: "Projects",
-          url: "/admin/project", // 절대 경로
+          url: "/admin/project",
         },
         {
           title: "Epoch",
-          url: "/admin/epoch", // 절대 경로
+          url: "/admin/epoch",
         },
         {
           title: "POC",
-          url: "/admin/POC", // 절대 경로
+          url: "/admin/POC",
         },
       ],
     },
@@ -61,11 +61,11 @@ const data = {
       items: [
         {
           title: "Overview",
-          url: "/validator/overview", // 절대 경로
+          url: "/validator/overview",
         },
         {
           title: "My Validate",
-          url: "/validator/my_validate", // 절대 경로
+          url: "/validator/my_validate",
         },
       ],
     },
@@ -76,11 +76,11 @@ const data = {
       items: [
         {
           title: "User Info",
-          url: "/my/user_info", // 절대 경로
+          url: "/my/user_info",
         },
         {
           title: "Claim",
-          url: "/my/claim", // 절대 경로
+          url: "/my/claim", 
         },
       ],
     },
@@ -91,13 +91,13 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/project/dashboard", // 절대 경로
+          url: "/project/dashboard", 
         },
       ],
     },
     {
       title: "Sign In",
-      url: "/signin", // 절대 경로
+      url: "/signin", 
       icon: LogIn,
     },
   ],
