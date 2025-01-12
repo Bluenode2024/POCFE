@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { projects as projectData } from "@/projects"; // 프로젝트 데이터
+import { projects as projectData } from "@/projects";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,17 +13,17 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
+import MyProjects from "@/components/MyProjects";
 
 export default function Dashboard() {
   const [projects] = useState(projectData);
   const router = useRouter();
+  const username = "김재원"
 
-  // 진행 중인 프로젝트 필터링 (status: "Processing")
   const ongoingProjects = projects.filter(
     (project) => project.status === "Processing"
   );
 
-  // 특정 리더의 프로젝트 필터링 (김재원, 김승원)
   const myProjects = projects.filter(
     (project) => project.leader_id === "김재원" || project.leader_id === "김승원"
   );
@@ -74,43 +74,7 @@ export default function Dashboard() {
 
         <div className="flex flex-row p-4 gap-8">
           <div className="flex-[2]">
-            <Card className="h-full rounded-lg shadow-md">
-              <CardHeader>
-                <CardTitle>내 프로젝트</CardTitle>
-              </CardHeader>
-              <CardContent className="overflow-y-auto h-full">
-                <Table className="w-full">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Project Title</TableHead>
-                      <TableHead>Deadline</TableHead>
-                      <TableHead>중요도</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {myProjects.map((project) => (
-                      <TableRow key={project.id}>
-                        <TableCell>{project.title}</TableCell>
-                        <TableCell>
-                          {new Date(project.end_date).toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              router.push(`/project/projectdetail/${project.id}`)
-                            }
-                          >
-                            Project Detail
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+          <MyProjects projects={projects} username={username} />
           </div>
 
           <div className="flex-[1] flex items-center justify-center">

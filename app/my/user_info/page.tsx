@@ -12,14 +12,12 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
+import MyProjects from "@/components/MyProjects";
+import { projects } from "@/projects";
 
 export default function MyPage() {
   const { address, isConnected } = useAccount();
-  const [projects] = useState([
-    { id: 1, name: "5주차 정기세션", type: "관리", status: "진행 중" },
-    { id: 2, name: "BNB 해커톤", type: "관리", status: "진행 중" },
-    { id: 3, name: "미디어 리서치", type: "관리", status: "진행 중" },
-  ]);
+  const username = "김재원";
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -81,8 +79,8 @@ export default function MyPage() {
           </div>
         </Card>
 
-        <div className="grid grid-cols-3 gap-6">
-          <Card className="p-4">
+        <div className="flex gap-6">
+          <Card className="p-4 flex-1 min-w-[30%]">
             <CardHeader>
               <CardTitle>기여도</CardTitle>
             </CardHeader>
@@ -92,60 +90,7 @@ export default function MyPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="p-4">
-            <CardHeader>
-              <CardTitle>내 관리 프로젝트</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table className="w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {projects.map((project) => (
-                    <TableRow key={project.id}>
-                      <TableCell>{project.name}</TableCell>
-                      <TableCell>
-                        <Button size="sm" variant="outline">
-                          관리 페이지
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-          <Card className="p-4">
-            <CardHeader>
-              <CardTitle>내 프로젝트</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table className="w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {projects.map((project) => (
-                    <TableRow key={project.id}>
-                      <TableCell>{project.name}</TableCell>
-                      <TableCell>
-                        <Button size="sm" variant="outline">
-                          상세 페이지
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <MyProjects projects={projects} username={username} />
         </div>
       </div>
     </div>
