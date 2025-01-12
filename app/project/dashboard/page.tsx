@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { projects as projectData } from "@/projects";
+import { projects as projectData } from "@/projects"; // 프로젝트 데이터
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,12 +18,14 @@ export default function Dashboard() {
   const [projects] = useState(projectData);
   const router = useRouter();
 
+  // 진행 중인 프로젝트 필터링 (status: "Processing")
   const ongoingProjects = projects.filter(
     (project) => project.status === "Processing"
   );
 
+  // 특정 리더의 프로젝트 필터링 (김재원, 김승원)
   const myProjects = projects.filter(
-    (project) => project.leader === "김재원" || project.leader === "김승원"
+    (project) => project.leader_id === "김재원" || project.leader_id === "김승원"
   );
 
   return (
@@ -39,8 +41,8 @@ export default function Dashboard() {
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Project Name</TableHead>
-                      <TableHead>Type</TableHead>
+                      <TableHead>Project Title</TableHead>
+                      <TableHead>Description</TableHead>
                       <TableHead>Deadline</TableHead>
                       <TableHead>Leader</TableHead>
                       <TableHead>중요도</TableHead>
@@ -50,11 +52,12 @@ export default function Dashboard() {
                   <TableBody>
                     {ongoingProjects.map((project) => (
                       <TableRow key={project.id}>
-                        <TableCell>{project.name}</TableCell>
-                        <TableCell>{project.type}</TableCell>
-                        <TableCell>{project.deadline}</TableCell>
-                        <TableCell>{project.leader}</TableCell>
-                        <TableCell>{project.priority}</TableCell>
+                        <TableCell>{project.title}</TableCell>
+                        <TableCell>{project.description}</TableCell>
+                        <TableCell>
+                          {new Date(project.end_date).toLocaleString()}
+                        </TableCell>
+                        <TableCell>{project.leader_id}</TableCell>
                         <TableCell>
                           <Button variant="outline" size="sm">
                             {project.status}
@@ -79,7 +82,7 @@ export default function Dashboard() {
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Project Name</TableHead>
+                      <TableHead>Project Title</TableHead>
                       <TableHead>Deadline</TableHead>
                       <TableHead>중요도</TableHead>
                       <TableHead></TableHead>
@@ -88,9 +91,10 @@ export default function Dashboard() {
                   <TableBody>
                     {myProjects.map((project) => (
                       <TableRow key={project.id}>
-                        <TableCell>{project.name}</TableCell>
-                        <TableCell>{project.deadline}</TableCell>
-                        <TableCell>{project.priority}</TableCell>
+                        <TableCell>{project.title}</TableCell>
+                        <TableCell>
+                          {new Date(project.end_date).toLocaleString()}
+                        </TableCell>
                         <TableCell>
                           <Button
                             size="sm"
@@ -110,11 +114,10 @@ export default function Dashboard() {
           </div>
 
           <div className="flex-[1] flex items-center justify-center">
-            <Button 
-            size="sm" className="bg-blue-500 text-white h-10 w-40"
-            onClick={() =>
-              router.push(`/project/generate`)
-            }
+            <Button
+              size="sm"
+              className="bg-blue-500 text-white h-10 w-40"
+              onClick={() => router.push(`/project/generate`)}
             >
               프로젝트 생성하기
             </Button>

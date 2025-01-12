@@ -31,7 +31,7 @@ export default function Signup() {
       username: formData.get("username") as string,
       fullName: "Jiho",
       department: formData.get("department") as string,
-      walletAddress: "0x2234567890123456789012345678901234567897",
+      walletAddress: "0x223456789012345678901234567890123456787",
       studentId: formData.get("studentId") as string,
     };
   

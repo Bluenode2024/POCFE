@@ -7,9 +7,9 @@ export interface ProjectTask {
   task_url: string; // text
   created_at: string; // timestamptz
   deadline: string; // timestamptz
-  assigned_user: string; // text
+  assigned_users: string[]; // text[]
   status: string; // task_status
-  priority: number; // priority
+  priority: string; // priority
 }
 
 export const tasks: ProjectTask[] = [
@@ -23,9 +23,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/101",
     created_at: "2024-11-01T10:30:00Z",
     deadline: "2024-11-15T18:00:00Z",
-    assigned_user: "박소연",
+    assigned_users: ["박지호", "최세창"],
     status: "In Progress",
-    priority: 9,
+    priority: "High",
   },
   {
     id: "102",
@@ -36,9 +36,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/102",
     created_at: "2024-11-02T11:00:00Z",
     deadline: "2024-11-20T18:00:00Z",
-    assigned_user: "김재원",
+    assigned_users: ["김재원", "박지호"],
     status: "In Progress",
-    priority: 10,
+    priority: "High",
   },
   {
     id: "103",
@@ -49,9 +49,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/103",
     created_at: "2024-11-03T12:00:00Z",
     deadline: "2024-11-25T18:00:00Z",
-    assigned_user: "최세창",
+    assigned_users: ["정원필", "박지호"],
     status: "Pending",
-    priority: 8,
+    priority: "Medium",
   },
   // 탈중앙화 투표 시스템 구축 (Project ID: 2)
   {
@@ -63,9 +63,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/201",
     created_at: "2024-11-02T13:00:00Z",
     deadline: "2024-11-22T23:59:00Z",
-    assigned_user: "김승원",
+    assigned_users: ["김승원", "박소연"],
     status: "In Progress",
-    priority: 10,
+    priority: "High",
   },
   {
     id: "202",
@@ -76,9 +76,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/202",
     created_at: "2024-11-03T14:00:00Z",
     deadline: "2024-11-28T23:59:00Z",
-    assigned_user: "정원필",
+    assigned_users: ["정원필", "김재원"],
     status: "Pending",
-    priority: 8,
+    priority: "Medium",
   },
   {
     id: "203",
@@ -89,9 +89,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/203",
     created_at: "2024-11-04T15:00:00Z",
     deadline: "2024-12-01T23:59:00Z",
-    assigned_user: "박소연",
+    assigned_users: ["박소연", "최세창"],
     status: "Pending",
-    priority: 9,
+    priority: "Medium",
   },
   // ZKP(영지식 증명) 라이브러리 검증 (Project ID: 3)
   {
@@ -103,9 +103,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/301",
     created_at: "2024-11-05T10:30:00Z",
     deadline: "2024-11-15T17:00:00Z",
-    assigned_user: "최세창",
+    assigned_users: ["최세창", "김재원"],
     status: "In Progress",
-    priority: 10,
+    priority: "High",
   },
   {
     id: "302",
@@ -116,9 +116,9 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/302",
     created_at: "2024-11-06T11:00:00Z",
     deadline: "2024-11-20T17:00:00Z",
-    assigned_user: "김재원",
+    assigned_users: ["김재원", "박소연"],
     status: "Pending",
-    priority: 9,
+    priority: "Medium",
   },
   {
     id: "303",
@@ -129,89 +129,8 @@ export const tasks: ProjectTask[] = [
     task_url: "https://example.com/task/303",
     created_at: "2024-11-07T12:00:00Z",
     deadline: "2024-11-25T17:00:00Z",
-    assigned_user: "박소연",
+    assigned_users: ["박소연", "정원필"],
     status: "Pending",
-    priority: 8,
+    priority: "Low",
   },
-  // DAO 거버넌스 솔루션 설계 (Project ID: 4)
-  {
-    id: "401",
-    project_id: "4",
-    title: "DAO 모델 설계",
-    description: "효율적인 DAO 거버넌스 모델 설계",
-    contribute_score: 8.0,
-    task_url: "https://example.com/task/401",
-    created_at: "2024-11-05T14:30:00Z",
-    deadline: "2024-11-20T20:00:00Z",
-    assigned_user: "정원필",
-    status: "In Progress",
-    priority: 10,
-  },
-  {
-    id: "402",
-    project_id: "4",
-    title: "스마트 컨트랙트 작성",
-    description: "DAO 운영을 위한 스마트 컨트랙트 개발",
-    contribute_score: 9.0,
-    task_url: "https://example.com/task/402",
-    created_at: "2024-11-06T15:00:00Z",
-    deadline: "2024-11-25T20:00:00Z",
-    assigned_user: "김재원",
-    status: "Pending",
-    priority: 10,
-  },
-  {
-    id: "403",
-    project_id: "4",
-    title: "테스트 및 디버깅",
-    description: "DAO 솔루션 테스트 및 디버깅",
-    contribute_score: 7.0,
-    task_url: "https://example.com/task/403",
-    created_at: "2024-11-07T16:00:00Z",
-    deadline: "2024-11-30T20:00:00Z",
-    assigned_user: "박소연",
-    status: "Pending",
-    priority: 9,
-  },
-  // Solana 기반 P2E 게임 제작 (Project ID: 5)
-  {
-    id: "501",
-    project_id: "5",
-    title: "게임 메커니즘 설계",
-    description: "P2E 게임의 코어 메커니즘 설계",
-    contribute_score: 9.0,
-    task_url: "https://example.com/task/501",
-    created_at: "2024-11-10T09:00:00Z",
-    deadline: "2024-11-20T22:00:00Z",
-    assigned_user: "이재원",
-    status: "In Progress",
-    priority: 10,
-  },
-  {
-    id: "502",
-    project_id: "5",
-    title: "스마트 컨트랙트 개발",
-    description: "게임 자산 거래를 처리하는 스마트 컨트랙트 개발",
-    contribute_score: 8.0,
-    task_url: "https://example.com/task/502",
-    created_at: "2024-11-12T10:00:00Z",
-    deadline: "2024-11-25T22:00:00Z",
-    assigned_user: "최세창",
-    status: "Pending",
-    priority: 9,
-  },
-  {
-    id: "503",
-    project_id: "5",
-    title: "게임 UI/UX 디자인",
-    description: "게임 플레이 경험을 위한 UI/UX 설계",
-    contribute_score: 7.0,
-    task_url: "https://example.com/task/503",
-    created_at: "2024-11-14T11:00:00Z",
-    deadline: "2024-12-01T22:00:00Z",
-    assigned_user: "박소연",
-    status: "Pending",
-    priority: 8,
-  },
-  // 나머지 프로젝트...
 ];

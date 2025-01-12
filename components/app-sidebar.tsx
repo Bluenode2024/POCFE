@@ -100,6 +100,11 @@ const data = {
       url: "/signin", 
       icon: LogIn,
     },
+    {
+      title: "Sign up",
+      url: "/signup", 
+      icon: LogIn,
+    },
   ],
 };
 
