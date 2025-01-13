@@ -82,6 +82,10 @@ const data = {
           title: "Claim",
           url: "/my/claim", 
         },
+        {
+          title: "Upload Proof",
+          url: "/my/upload_proof", 
+        },
       ],
     },
     {
