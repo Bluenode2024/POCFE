@@ -60,12 +60,8 @@ const data = {
       icon: ShieldCheck,
       items: [
         {
-          title: "Overview",
-          url: "/validator/overview",
-        },
-        {
-          title: "My Validate",
-          url: "/validator/my_validate",
+          title: "Validate",
+          url: "/validator/validate",
         },
       ],
     },
