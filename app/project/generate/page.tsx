@@ -1,12 +1,29 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Generate() {
   const [loading, setLoading] = useState(false);
@@ -32,18 +49,23 @@ export default function Generate() {
       tasks: tasks.map((task, index) => ({
         title: formData.get(`task_title_${index}`) as string,
         description: formData.get(`task_description_${index}`) as string,
-        contributeScore: formData.get(`task_contributeScore_${index}`) as string,
+        contributeScore: formData.get(
+          `task_contributeScore_${index}`
+        ) as string,
       })),
     };
 
     try {
-      const response = await fetch("http://localhost:3001/projects/createProject", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "http://localhost:3001/projects/createProject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("서버 응답 에러");
@@ -65,7 +87,15 @@ export default function Generate() {
     }
   };
 
-  const memberOptions = ["김재원", "이재원", "최세창", "정원필", "박지호", "김승원", "안성진"];
+  const memberOptions = [
+    "김재원",
+    "이재원",
+    "최세창",
+    "정원필",
+    "박지호",
+    "김승원",
+    "안성진",
+  ];
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -73,22 +103,22 @@ export default function Generate() {
         onSubmit={handleRegister}
         className="w-full max-w-md p-6 bg-white rounded-lg shadow-md"
       >
-        <h1 className="text-xl font-semibold text-center mb-6">Create a Project</h1>
+        <h1 className="text-xl font-semibold text-center mb-6">
+          Create a Project
+        </h1>
         <div className="grid gap-4">
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="title">Project Title</Label>
-            <Input name="title" id="title" placeholder="프로젝트 제목을 입력하세요" />
+            <Input
+              name="title"
+              id="title"
+              placeholder="프로젝트 제목을 입력하세요"
+            />
           </div>
 
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="Description">Project Description</Label>
-            <textarea
-              name="Description"
-              id="Description"
-              rows={5}
-              className="border rounded-lg p-3 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Write project detail here..."
-            />
+            <Textarea placeholder="Write project detail here..." />
           </div>
 
           <div className="flex flex-col space-y-1.5">
@@ -130,27 +160,21 @@ export default function Generate() {
 
           <div className="flex flex-col space-y-1.5">
             <Label>Project Members</Label>
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    {selectedMember || "Select a Member"}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
+            <div className="flex items-center justify-center space-x-4">
+              <Select onValueChange={setSelectedMember}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a Member" />
+                </SelectTrigger>
+                <SelectContent>
                   {memberOptions.map((member) => (
-                    <DropdownMenuItem
-                      key={member}
-                      onClick={() => setSelectedMember(member)}
-                    >
+                    <SelectItem key={member} value={member}>
                       {member}
-                    </DropdownMenuItem>
+                    </SelectItem>
                   ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </SelectContent>
+              </Select>
               <Button
                 size="sm"
-                className="mt-2"
                 onClick={handleAddMember}
                 type="button"
               >
