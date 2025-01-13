@@ -80,7 +80,12 @@ export default function Dashboard() {
           <div className="flex-[1] flex items-center justify-center">
             <Button
               size="sm"
-              className="bg-blue-500 text-white h-10 w-40"
+              className="bg-black-500 text-white h-10 w-40"
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.5)",
+                transition: "background-color 0.3s"
+               }}
+               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 1)")}
+               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.5)")}
               onClick={() => router.push(`/project/generate`)}
             >
               프로젝트 생성하기

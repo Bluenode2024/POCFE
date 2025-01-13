@@ -38,7 +38,7 @@ export default function ProjectDetailPage() {
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* 새로 추가된 Task Table */}
-        <div className="border border-black p-4 rounded-lg">
+        <div className="border border-black p-8 rounded-lg">
           <h2 className="text-xl font-bold mb-4">Task Overview</h2>
           <Table className="w-full">
             <TableHeader>
