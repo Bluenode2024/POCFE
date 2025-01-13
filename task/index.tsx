@@ -10,6 +10,7 @@ export interface ProjectTask {
   assigned_users: string[]; // text[]
   status: string; // task_status
   priority: string; // priority
+  validateStatus: "Not Uploaded" | "Pending" | "Validated" | "Rejected"; // 추가된 속성
 }
 
 export const tasks: ProjectTask[] = [
@@ -26,6 +27,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["박지호", "최세창"],
     status: "In Progress",
     priority: "High",
+    validateStatus: "Not Uploaded", // 기본값
   },
   {
     id: "102",
@@ -39,6 +41,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["김재원", "박지호"],
     status: "In Progress",
     priority: "High",
+    validateStatus: "Pending",
   },
   {
     id: "103",
@@ -52,6 +55,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["정원필", "박지호"],
     status: "Pending",
     priority: "Medium",
+    validateStatus: "Rejected",
   },
   // 탈중앙화 투표 시스템 구축 (Project ID: 2)
   {
@@ -66,6 +70,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["김승원", "박소연"],
     status: "In Progress",
     priority: "High",
+    validateStatus: "Validated",
   },
   {
     id: "202",
@@ -79,6 +84,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["정원필", "김재원"],
     status: "Pending",
     priority: "Medium",
+    validateStatus: "Not Uploaded",
   },
   {
     id: "203",
@@ -92,6 +98,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["박소연", "최세창"],
     status: "Pending",
     priority: "Medium",
+    validateStatus: "Pending",
   },
   // ZKP(영지식 증명) 라이브러리 검증 (Project ID: 3)
   {
@@ -106,6 +113,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["최세창", "김재원"],
     status: "In Progress",
     priority: "High",
+    validateStatus: "Validated",
   },
   {
     id: "302",
@@ -119,6 +127,7 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["김재원", "박소연"],
     status: "Pending",
     priority: "Medium",
+    validateStatus: "Rejected",
   },
   {
     id: "303",
@@ -132,5 +141,6 @@ export const tasks: ProjectTask[] = [
     assigned_users: ["박소연", "정원필"],
     status: "Pending",
     priority: "Low",
+    validateStatus: "Not Uploaded",
   },
 ];
