@@ -15,41 +15,45 @@ import {
 import { useWriteContract } from "wagmi";
 import BNS_ABI from "@/abi/BNS.abi";
 import { useEffect, useState } from "react";
-import { Admin_Project, adminpjcolumns } from "../../column";
+import { Admin_Project, pendingColumns } from "../../column";
 import { DataTable } from "../../data-table";
+import { projects as testProjects } from "../../../projects/index";
 
-async function getData(): Promise<Admin_Project[]> {
-  return [
-    {
-      ProjectID: "1",
-      Name: "위메이드 프론트 개발",
-      Deadline: "2024.01.18 00:00",
-      Detail: "Detail",
-    },
-    {
-      ProjectID: "2",
-      Name: "위메이드 백 개발",
-      Deadline: "2024.01.22 00:00",
-      Detail: "Detail",
-    },
-    {
-      ProjectID: "3",
-      Name: "위메이드 컨트랙트 개발",
-      Deadline: "2024.01.30 00:00",
-      Detail: "Detail",
-    },
-  ];
-}
+export default function AdminProjectDetail() {
+  const [projects, setProjects] = useState(testProjects);
+  const handleAccept = (id: string) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === id
+          ? {
+              ...project,
+              start_date: new Date().toISOString(), // 현재 시각으로 start_date 수정
+              status: "Processing", // 상태를 Processing으로 변경
+            }
+          : project
+      )
+    );
+  };
 
-export default function ProjectDetailPage() {
-  const [data, setData] = useState<Admin_Project[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const handleReject = (id: string) => {
+    const rejectionReason = prompt("Enter rejection reason:");
+    if (!rejectionReason) return;
+
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === id
+          ? {
+              ...project,
+              rejection_reason: rejectionReason,
+              status: "Rejected",
+            }
+          : project
+      )
+    );
+  };
+  const pendingProjects = projects.filter(
+    (project) => project.status === "Pending"
+  );
 
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
@@ -57,10 +61,35 @@ export default function ProjectDetailPage() {
         <div className="p-4">
           <Card className="w-full rounded-lg shadow-md">
             <CardHeader>
-              <CardTitle>Admin Project</CardTitle>
+              <CardTitle>Pending Project</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataTable columns={adminpjcolumns} data={data} />
+              <DataTable
+                columns={[
+                  ...pendingColumns,
+                  {
+                    accessorKey: "actions",
+                    header: "Actions",
+                    cell: ({ row }) => (
+                      <div className="flex gap-2">
+                        <button
+                          className="px-2 py-1 bg-green-500 text-white rounded"
+                          onClick={() => handleAccept(row.original.id)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="px-2 py-1 bg-red-500 text-white rounded"
+                          onClick={() => handleReject(row.original.id)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    ),
+                  },
+                ]}
+                data={pendingProjects}
+              />
             </CardContent>
           </Card>
         </div>

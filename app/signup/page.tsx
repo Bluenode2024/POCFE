@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,11 @@ export default function Login() {
     }
 
     setLoading(true);
+
+    if (!window.ethereum) {
+      alert("MetaMask를 설치해주세요!");
+      return;
+    }
 
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -99,7 +104,11 @@ export default function Login() {
             <Input value={message} readOnly />
           </div>
 
-          <Button onClick={handleLogin} className="w-full" disabled={loading || !walletAddress}>
+          <Button
+            onClick={handleLogin}
+            className="w-full"
+            disabled={loading || !walletAddress}
+          >
             {loading ? "로그인 중..." : "Log In"}
           </Button>
         </div>

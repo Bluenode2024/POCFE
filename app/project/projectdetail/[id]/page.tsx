@@ -1,12 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import TaskDetailCard from "@/components/TaskDetailCard";
 import {
@@ -23,7 +18,7 @@ export default function ProjectDetailPage() {
   const { id } = useParams();
   const projectId = Array.isArray(id) ? id[0] : id;
 
-  const username = "박지호"; 
+  const username = "정원필";
 
   if (!projectId) {
     return (
