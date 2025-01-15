@@ -12,7 +12,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 interface CarouselComponentProps {
-  images: string[];
+  images: { src: string; text: React.ReactNode }[]; // images는 src와 text를 가진 객체 배열
 }
 
 export default function CarouselComponent({ images }: CarouselComponentProps) {
@@ -38,23 +38,23 @@ export default function CarouselComponent({ images }: CarouselComponentProps) {
     <Carousel
       opts={{ loop: true }}
       setApi={setApi}
-      className="relative w-[65vw] h-[50vh] overflow-hidden flex items-center justify-center"
+      className="relative w-full h-[50vh] overflow-hidden flex items-center justify-center"
     >
       <CarouselContent className="flex w-full h-full">
-        {images.map((image, index) => (
+        {images.map((item, index) => (
           <CarouselItem
             key={index}
             className="w-full h-full shrink-0 flex items-center justify-center"
           >
             <Card className="relative w-[55vw] h-[50vh] overflow-hidden shadow-lg rounded-xl">
               <img
-                src={image}
+                src={item.src} // 객체의 src를 사용
                 alt={`Slide ${index + 1}`}
                 className="absolute top-0 left-0 w-full h-full object-cover"
               />
-              <CardContent className="relative flex items-center justify-center w-full h-full bg-black bg-opacity-30">
-                <span className="text-4xl font-bold text-white">
-                  Slide {index + 1}
+              <CardContent className="absolute bottom-4 left-4 bg-black bg-opacity-70 p-4 rounded-md">
+                <span className="text-xl font-bold text-white">
+                  {item.text} {/* 객체의 text를 사용 */}
                 </span>
               </CardContent>
             </Card>
