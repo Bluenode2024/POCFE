@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 const ValidatePage = () => {
-  const isDepositConfirmed = false;
+  const isDepositConfirmed = true;
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
   const [depositAmount, setDepositAmount] = useState<string>("");
 
@@ -168,7 +168,6 @@ const ValidatePage = () => {
           </Table>
         </CardContent>
       </Card>
-
       <Card className="w-full rounded-lg shadow-md">
         <CardHeader>
           <CardTitle>Validated List</CardTitle>

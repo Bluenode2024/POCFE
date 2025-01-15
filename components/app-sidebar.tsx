@@ -22,7 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-const userRole = "user"; // "admin" 또는 "user"로 설정
+const userRole = "Admin"; // "admin" 또는 "user"로 설정
 const isLoggedIn = false; // 로그인 상태 여부
 
 const data = {
