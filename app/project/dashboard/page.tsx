@@ -17,15 +17,17 @@ import MyProjects from "@/components/MyProjects";
 
 export default function Dashboard() {
   const [projects] = useState(projectData);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const router = useRouter();
-  const username = "김재원"
+  const username = "김재원";
 
   const ongoingProjects = projects.filter(
     (project) => project.status === "Processing"
   );
 
   const myProjects = projects.filter(
-    (project) => project.leader_id === "김재원" || project.leader_id === "김승원"
+    (project) =>
+      project.leader_id === "김재원" || project.leader_id === "김승원"
   );
 
   return (
@@ -45,26 +47,42 @@ export default function Dashboard() {
                       <TableHead>Description</TableHead>
                       <TableHead>Deadline</TableHead>
                       <TableHead>Leader</TableHead>
-                      <TableHead>중요도</TableHead>
                       <TableHead>Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {ongoingProjects.map((project) => (
-                      <TableRow key={project.id}>
-                        <TableCell>{project.title}</TableCell>
-                        <TableCell>{project.description}</TableCell>
-                        <TableCell>
-                          {new Date(project.end_date).toLocaleString()}
-                        </TableCell>
-                        <TableCell>{project.leader_id}</TableCell>
-                        <TableCell>
-                          <Button variant="outline" size="sm">
-                            {project.status}
-                          </Button>
+                    {isLoading ? (
+                      // 로딩 중일 때 표시
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center">
+                          Loading data...
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ) : ongoingProjects.length > 0 ? (
+                      // 데이터가 있을 때
+                      ongoingProjects.map((project) => (
+                        <TableRow key={project.id}>
+                          <TableCell>{project.title}</TableCell>
+                          <TableCell>{project.description}</TableCell>
+                          <TableCell>
+                            {new Date(project.end_date).toLocaleString()}
+                          </TableCell>
+                          <TableCell>{project.leader_id}</TableCell>
+                          <TableCell>
+                            <Button variant="outline" size="sm">
+                              {project.status}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      // 데이터가 없을 때 표시
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center">
+                          No ongoing projects to display.
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -74,18 +92,23 @@ export default function Dashboard() {
 
         <div className="flex flex-row p-4 gap-8">
           <div className="flex-[2]">
-          <MyProjects projects={projects} username={username} />
+            <MyProjects projects={projects} username={username} />
           </div>
 
           <div className="flex-[1] flex items-center justify-center">
             <Button
               size="sm"
               className="bg-black-500 text-white h-10 w-40"
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.5)",
-                transition: "background-color 0.3s"
-               }}
-               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 1)")}
-               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.5)")}
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                transition: "background-color 0.3s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 1)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.5)")
+              }
               onClick={() => router.push(`/project/generate`)}
             >
               프로젝트 생성하기

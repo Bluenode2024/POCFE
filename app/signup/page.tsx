@@ -1,64 +1,46 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAccount } from "wagmi";
 import { useState } from "react";
-import { ethers } from "ethers";
+import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function Signup() {
+  const { address } = useAccount();
   const [loading, setLoading] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [message, setMessage] = useState("Sign this message to log in!");
+  const router = useRouter();
 
-  const handleConnectWallet = async () => {
-    if (!window.ethereum) {
-      alert("MetaMask를 설치해주세요!");
-      return;
-    }
-
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      setWalletAddress(address);
-      alert(`지갑 연결 성공: ${address}`);
-    } catch (error) {
-      console.error("지갑 연결 실패:", error);
-      alert("지갑 연결에 실패했습니다.");
-    }
-  };
-
-  const handleLogin = async () => {
-    if (!walletAddress) {
-      alert("지갑을 먼저 연결해주세요!");
-      return;
-    }
-
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
 
-    if (!window.ethereum) {
-      alert("MetaMask를 설치해주세요!");
-      return;
-    }
+    console.log("폼 제출됨");
+
+    // FormData로 입력값 가져오기
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      username: formData.get("username") as string,
+      fullName: "Jiho",
+      department: formData.get("department") as string,
+      walletAddress: "0x223456789012345678901234567890123456787",
+      studentId: formData.get("studentId") as string,
+    };
+
+    console.log("전송 데이터:", data);
 
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-
-      // 서명 생성
-      const signature = await signer.signMessage(message);
-
-      // 로그인 요청 데이터
-      const data = {
-        walletAddress,
-        message,
-        signature,
-      };
-
-      console.log("로그인 요청 데이터:", data);
-
-      const response = await fetch("http://localhost:3001/auth/sign-in", {
+      const response = await fetch("http://localhost:3001/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,16 +49,15 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("로그인 실패");
+        throw new Error("서버 응답 에러");
       }
 
       const result = await response.json();
-      console.log("로그인 성공:", result);
-      alert("로그인 성공!");
-      // 로그인 후 토큰 저장 또는 페이지 이동
+      console.log("서버 응답:", result);
+      alert("회원가입 성공!");
     } catch (error) {
-      console.error("로그인 에러:", error);
-      alert("로그인 실패. 다시 시도하세요.");
+      console.error("회원가입 실패:", error);
+      alert("회원가입 실패!");
     } finally {
       setLoading(false);
     }
@@ -84,35 +65,66 @@ export default function Login() {
 
   return (
     <div className="flex flex-1 justify-center items-center bg-gray-50">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-xl font-semibold text-center mb-6">Log In</h1>
-        <div className="grid gap-4">
-          <div className="flex flex-col space-y-1.5">
-            <Label>지갑 주소</Label>
-            <Input
-              value={walletAddress || ""}
-              readOnly
-              placeholder="지갑을 연결해주세요"
-            />
-            <Button onClick={handleConnectWallet} disabled={loading}>
-              지갑 연결
+      <Card className="w-[400px] bg-white shadow-md">
+        <CardHeader className="text-center">
+          <CardTitle>Create an Account</CardTitle>
+          <CardDescription>Create an account to continue</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleRegister}>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="username">이름</Label>
+                <Input
+                  name="username"
+                  id="username"
+                  placeholder="이름을 입력하세요"
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="studentId">학번</Label>
+                <Input
+                  name="studentId"
+                  id="studentId"
+                  placeholder="학번을 입력하세요"
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="department">학과</Label>
+                <Input
+                  name="department"
+                  id="department"
+                  placeholder="학과를 입력하세요"
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox id="terms" />
+                <Label htmlFor="terms" className="text-sm">
+                  I accept terms and conditions
+                </Label>
+              </div>
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "회원가입 중..." : "Sign Up"}
             </Button>
-          </div>
-
-          <div className="flex flex-col space-y-1.5">
-            <Label>서명 메시지</Label>
-            <Input value={message} readOnly />
-          </div>
-
-          <Button
-            onClick={handleLogin}
-            className="w-full"
-            disabled={loading || !walletAddress}
-          >
-            {loading ? "로그인 중..." : "Log In"}
-          </Button>
-        </div>
-      </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <p className="text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <Button
+              variant="link"
+              className="text-blue-600 hover:underline p-0 m-0 ml-1 border-none bg-transparent cursor-pointer"
+              onClick={() => router.push("/signin")}
+            >
+              Login
+            </Button>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
