@@ -207,7 +207,11 @@ const ValidateProofPage = () => {
                     {new Date(task.deadline).toLocaleString()}
                   </TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      style={{ marginLeft: "15px" }}
+                    >
                       {task.validateStatus}
                     </Button>
                   </TableCell>

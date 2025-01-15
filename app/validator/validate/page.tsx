@@ -10,13 +10,26 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const ValidatePage = () => {
   const isDepositConfirmed = true;
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
+  const [validatedTaskIds, setValidatedTaskIds] = useState<string[]>([]);
   const [depositAmount, setDepositAmount] = useState<string>("");
 
   const pendingTasks = tasks.filter(
@@ -25,6 +38,7 @@ const ValidatePage = () => {
   const validatedTasks = tasks.filter(
     (task) => task.validateStatus === "Validated"
   );
+  const { toast } = useToast();
 
   return (
     <div className="relative flex flex-col gap-10 p-4 h-screen">
@@ -106,7 +120,15 @@ const ValidatePage = () => {
                     <TableCell>
                       {new Date(task.deadline).toLocaleString()}
                     </TableCell>
-                    <TableCell>{task.validateStatus}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        style={{ marginLeft: "12px" }}
+                      >
+                        {task.validateStatus}
+                      </Button>
+                    </TableCell>
                     <TableCell>
                       <Dialog>
                         <DialogTrigger asChild>
@@ -130,28 +152,79 @@ const ValidatePage = () => {
                             {selectedTask?.description}
                           </p>
                           <p className="mb-4">
-                            <strong>Proof URL:</strong>{" "}
+                            <strong>Image URL:</strong>{" "}
                             <a
                               href={selectedTask?.task_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-500 underline"
+                              className="text-blue-500 underline break-all"
                             >
                               {selectedTask?.task_url}
                             </a>
                           </p>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => {
-                              console.log(
-                                `Validated Task ID: ${selectedTask?.id}`
-                              );
-                              setSelectedTask(null);
-                            }}
-                          >
-                            Validate
-                          </Button>
+                          <p className="mb-4">
+                            <strong>Files:</strong>
+                            {selectedTask?.files?.length
+                              ? selectedTask.files.map((file, index) => (
+                                  <a
+                                    key={index}
+                                    href={URL.createObjectURL(file)} // 파일을 브라우저에서 열 수 있도록 URL 생성
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block text-blue-500 underline break-all mt-2"
+                                  >
+                                    {file.name}
+                                  </a>
+                                ))
+                              : "No files uploaded"}
+                          </p>
+                          <p className="mb-4">
+                            <strong>Additional Note:</strong>{" "}
+                            {selectedTask?.additionalNotes}
+                          </p>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                                validatedTaskIds.includes(task.id)
+                                  ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 검증된 경우 회색 버튼
+                                  : "bg-black text-white hover:bg-gray-800 focus:ring-gray-700" // 기본 상태
+                              }`}
+                              disabled={validatedTaskIds.includes(task.id)} // 버튼 비활성화
+                            >
+                              Validate
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. If there are
+                                  issues with your validation, you may lose your
+                                  deposit.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    if (selectedTask) {
+                                      setValidatedTaskIds((prev) => [
+                                        ...prev,
+                                        selectedTask.id,
+                                      ]); // 검증된 테스크 ID 추가
+
+                                      toast({
+                                        title: "Validate: Success!",
+                                      });
+                                    }
+                                  }}
+                                >
+                                  Continue
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DialogContent>
                       </Dialog>
                     </TableCell>
@@ -191,7 +264,15 @@ const ValidatePage = () => {
                     <TableCell>
                       {new Date(task.deadline).toLocaleString()}
                     </TableCell>
-                    <TableCell>{task.validateStatus}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        style={{ marginLeft: "12px" }}
+                      >
+                        {task.validateStatus}
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (

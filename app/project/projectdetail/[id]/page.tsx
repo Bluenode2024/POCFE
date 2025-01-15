@@ -18,7 +18,7 @@ export default function ProjectDetailPage() {
   const { id } = useParams();
   const projectId = Array.isArray(id) ? id[0] : id;
 
-  const username = "정원필";
+  const username = "박지호";
 
   if (!projectId) {
     return (

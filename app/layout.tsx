@@ -5,13 +5,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
 import { headers } from "next/headers";
 import ContextProvider from "@/context";
-
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -36,13 +35,11 @@ export default async function RootLayout({
           </SidebarProvider>
 
           <main className="flex-1 flex flex-col overflow-auto bg-gray-100">
-            <ContextProvider cookies={cookies}>
-              {children}
-            </ContextProvider>
+            <ContextProvider cookies={cookies}>{children}</ContextProvider>
           </main>
+          <Toaster />
         </div>
       </body>
     </html>
   );
 }
-
