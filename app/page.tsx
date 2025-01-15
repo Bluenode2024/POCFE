@@ -75,7 +75,7 @@ export default function Home() {
         {/* Right Table */}
         <Card className="w-full rounded-lg shadow-md self-end">
           <CardHeader>
-            <CardTitle className="text-2xl">Approaching-deadline project</CardTitle>
+            <CardTitle className="text-2xl">Upcoming Duedate</CardTitle>
           </CardHeader>
           <CardContent>
             <Table className="w-full">
