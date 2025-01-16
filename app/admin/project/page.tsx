@@ -1,21 +1,9 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { tasks } from "@/task/index";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableHeader,
-} from "@/components/ui/table";
-import { useWriteContract } from "wagmi";
-import BNS_ABI from "@/abi/BNS.abi";
-import { useEffect, useState } from "react";
-import { Admin_Project, pendingColumns } from "../../column";
+
+import { useState } from "react";
+import { pendingColumns } from "../../column";
 import { DataTable } from "../../data-table";
 import { projects as testProjects } from "../../../projects/index";
 

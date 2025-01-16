@@ -37,30 +37,32 @@ export default function Signup() {
       studentId: formData.get("studentId") as string,
     };
 
+    alert("로그인 성공");
+
     console.log("전송 데이터:", data);
 
-    try {
-      const response = await fetch("http://localhost:3001/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    // try {
+    //   const response = await fetch("http://localhost:3001/auth/register", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
 
-      if (!response.ok) {
-        throw new Error("서버 응답 에러");
-      }
+    //   if (!response.ok) {
+    //     throw new Error("서버 응답 에러");
+    //   }
 
-      const result = await response.json();
-      console.log("서버 응답:", result);
-      alert("회원가입 성공!");
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-      alert("회원가입 실패!");
-    } finally {
-      setLoading(false);
-    }
+    //   const result = await response.json();
+    //   console.log("서버 응답:", result);
+    //   alert("회원가입 성공!");
+    // } catch (error) {
+    //   console.error("회원가입 실패:", error);
+    //   alert("회원가입 실패!");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -108,7 +110,7 @@ export default function Signup() {
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "회원가입 중..." : "Sign Up"}
+              Sign up
             </Button>
           </form>
         </CardContent>

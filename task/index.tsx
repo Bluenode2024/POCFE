@@ -26,7 +26,7 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "Significant effort was invested to ensure the highest quality.",
     created_at: "2024-11-01T10:30:00Z",
     deadline: "2024-11-15T18:00:00Z",
     assigned_users: ["박지호", "최세창"],
@@ -43,7 +43,7 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "This task reflects diligent work and a commitment to excellence.",
     created_at: "2024-11-02T11:00:00Z",
     deadline: "2024-11-20T18:00:00Z",
     assigned_users: ["김재원", "박지호"],
@@ -60,7 +60,7 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "Efforts were meticulously focused to meet project specifications.",
     created_at: "2024-11-03T12:00:00Z",
     deadline: "2024-11-25T18:00:00Z",
     assigned_users: ["정원필", "박지호"],
@@ -79,7 +79,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "Work demonstrates exceptional dedication and quality.",
     created_at: "2024-11-02T13:00:00Z",
     deadline: "2024-11-22T23:59:00Z",
     assigned_users: ["김승원", "박소연"],
@@ -97,7 +97,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "The task underscores the importance of precision and accuracy.",
     created_at: "2024-11-03T14:00:00Z",
     deadline: "2024-11-28T23:59:00Z",
     assigned_users: ["정원필", "김재원"],
@@ -115,7 +115,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "Careful attention to detail was given throughout the task.",
     created_at: "2024-11-04T15:00:00Z",
     deadline: "2024-12-01T23:59:00Z",
     assigned_users: ["박소연", "최세창"],
@@ -134,7 +134,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "The analysis reflects a comprehensive approach to security.",
     created_at: "2024-11-05T10:30:00Z",
     deadline: "2024-11-15T17:00:00Z",
     assigned_users: ["최세창", "김재원"],
@@ -152,7 +152,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "The review process emphasized both quality and security.",
     created_at: "2024-11-06T11:00:00Z",
     deadline: "2024-11-20T17:00:00Z",
     assigned_users: ["김재원", "박소연"],
@@ -170,7 +170,7 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "진짜 열심히 했습니다..",
+    additionalNotes: "The design exemplifies a meticulous and thorough approach.",
     created_at: "2024-11-07T12:00:00Z",
     deadline: "2024-11-25T17:00:00Z",
     assigned_users: ["박소연", "정원필"],

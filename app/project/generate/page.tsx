@@ -54,30 +54,30 @@ export default function Generate() {
         ) as string,
       })),
     };
+    alert("프로젝트가 성공적으로 생성되었습니다!");
+    // try {
+    //   const response = await fetch(
+    //     "http://localhost:3001/projects/createProject",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify(data),
+    //     }
+    //   );
 
-    try {
-      const response = await fetch(
-        "http://localhost:3001/projects/createProject",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+    //   if (!response.ok) {
+    //     throw new Error("서버 응답 에러");
+    //   }
 
-      if (!response.ok) {
-        throw new Error("서버 응답 에러");
-      }
-
-      const result = await response.json();
-      alert("프로젝트가 성공적으로 생성되었습니다!");
-    } catch (error) {
-      alert("프로젝트 생성에 실패했습니다. 다시 시도해주세요.");
-    } finally {
-      setLoading(false);
-    }
+    //   const result = await response.json();
+    //   alert("프로젝트가 성공적으로 생성되었습니다!");
+    // } catch (error) {
+    //   alert("프로젝트 생성에 실패했습니다. 다시 시도해주세요.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleAddMember = () => {
@@ -194,7 +194,7 @@ export default function Generate() {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "프로젝트 생성 중..." : "프로젝트 생성"}
+            "프로젝트 생성"
           </Button>
         </div>
       </form>

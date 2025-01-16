@@ -25,6 +25,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useWriteContract, useAccount } from "wagmi";
+import BNS_ABI from "@/abi/IBND.abi";
 
 const ValidatePage = () => {
   const isDepositConfirmed = true;
@@ -39,6 +41,18 @@ const ValidatePage = () => {
     (task) => task.validateStatus === "Validated"
   );
   const { toast } = useToast();
+
+  const { writeContract } = useWriteContract();
+  const { address } = useAccount();
+
+  const handleDeposit = async () => {
+    writeContract({
+      abi: BNS_ABI,
+      address: "0x421dCf7d6385c77cC5ea3c62ff1016eCF447CbA7",
+      functionName: "addUser",
+      args: [address],
+    });
+  };
 
   return (
     <div className="relative flex flex-col gap-10 p-4 h-screen">
@@ -83,9 +97,7 @@ const ValidatePage = () => {
             <Button
               size="sm"
               className="bg-red-500 text-white hover:bg-red-600"
-              onClick={() => {
-                console.log(`Deposit confirmed with amount: ${depositAmount}`);
-              }}
+              onClick={handleDeposit}
             >
               Confirm Deposit
             </Button>

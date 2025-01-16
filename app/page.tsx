@@ -14,11 +14,53 @@ import {
 
 export default function Home() {
   const images = [
-    {src: "https://imgur.com/FUy6dyL.jpg",text: (<><div className="text-2xl font-bold">블루노드 정규 세션</div><span className="text-xs">10,000원 | 9명 참여</span></>),},
-    {src: "https://imgur.com/1rf5guF.jpg",text: (<><div className="text-2xl font-bold">블루노드 X 인천광역시 기술 혁신 campaign</div><span className="text-xs">100,000원 | 5명 참여</span></>),},
-    {src: "https://imgur.com/y02IRK4.jpg",text: (<><div className="text-2xl font-bold">2025 KOBAC BlueNode</div><span className="text-xs">300,000원 | 7명 참여</span></>),},
-    {src: "https://imgur.com/08xTbmI.jpg",text: (<><div className="text-2xl font-bold">Scroll 오픈세션</div><span className="text-xs">10,000원 | 11명 참여</span></>),},
-    {src: "https://imgur.com/slfIvqa.jpg",text: (<><div className="text-2xl font-bold">블루노드 방학 세션</div><span className="text-xs">10,000원 | 8명 참여</span></>),},
+    {
+      src: "https://imgur.com/FUy6dyL.jpg",
+      text: (
+        <>
+          <div className="text-2xl font-bold">블루노드 정규 세션</div>
+          <span className="text-xs"> 9명 참여</span>
+        </>
+      ),
+    },
+    {
+      src: "https://imgur.com/1rf5guF.jpg",
+      text: (
+        <>
+          <div className="text-2xl font-bold">
+            블루노드 X 인천광역시 기술 혁신 campaign
+          </div>
+          <span className="text-xs"> 5명 참여</span>
+        </>
+      ),
+    },
+    {
+      src: "https://imgur.com/y02IRK4.jpg",
+      text: (
+        <>
+          <div className="text-2xl font-bold">2025 KOBAC BlueNode</div>
+          <span className="text-xs"> 7명 참여</span>
+        </>
+      ),
+    },
+    {
+      src: "https://imgur.com/08xTbmI.jpg",
+      text: (
+        <>
+          <div className="text-2xl font-bold">Scroll 오픈세션</div>
+          <span className="text-xs"> 11명 참여</span>
+        </>
+      ),
+    },
+    {
+      src: "https://imgur.com/slfIvqa.jpg",
+      text: (
+        <>
+          <div className="text-2xl font-bold">블루노드 방학 세션</div>
+          <span className="text-xs"> 8명 참여</span>
+        </>
+      ),
+    },
   ];
 
   const rankers = [
@@ -29,9 +71,15 @@ export default function Home() {
 
   const projects = [
     { title: "NFT 마켓플레이스 개발", deadline: "2025. 1. 21 pm 12:00" },
-    { title: "ZKP(영지식 증명) 라이브러리 검증", deadline: "2025. 1. 30 am 12:00" },
+    {
+      title: "ZKP(영지식 증명) 라이브러리 검증",
+      deadline: "2025. 1. 30 am 12:00",
+    },
     { title: "스마트 컨트랙트 보안 검토", deadline: "2025. 1. 24 pm 14:00" },
-    { title: "Blockchain Data Indexing API 개발", deadline: "2025. 2. 1 am 12:00" },
+    {
+      title: "Blockchain Data Indexing API 개발",
+      deadline: "2025. 2. 1 am 12:00",
+    },
   ];
 
   return (
@@ -46,29 +94,45 @@ export default function Home() {
         {/* Left Table */}
         <Card className="w-full max-w-4xl shadow-md">
           <CardHeader>
-            <h2 className="text-2xl font-bold text-left">Top 3 Ranker</h2>
+            <h2 className="text-2xl font-bold text-left">User Ranking</h2>
           </CardHeader>
           <CardContent>
-            <table className="table-auto w-full border-collapse text-left">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-4 py-2 border-b font-semibold">Rank</th>
-                  <th className="px-4 py-2 border-b font-semibold">Name</th>
-                  <th className="px-4 py-2 border-b font-semibold">Account</th>
-                  <th className="px-4 py-2 border-b font-semibold">Contribution</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader className="bg-gray-100">
+                <TableRow>
+                  <TableHead className="px-4 py-2 border-b font-semibold text-left">
+                    Rank
+                  </TableHead>
+                  <TableHead className="px-4 py-2 border-b font-semibold text-left">
+                    Name
+                  </TableHead>
+                  <TableHead className="px-4 py-2 border-b font-semibold text-right">
+                    Account
+                  </TableHead>
+                  <TableHead className="px-4 py-2 border-b font-semibold text-center">
+                    Contribution
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {rankers.map((ranker) => (
-                  <tr key={ranker.rank} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 border-b text-center">{ranker.rank}</td>
-                    <td className="px-4 py-2 border-b">{ranker.name}</td>
-                    <td className="px-4 py-2 border-b text-right">{ranker.account}</td>
-                    <td className="px-4 py-2 border-b text-center">{ranker.contribution}</td>
-                  </tr>
+                  <TableRow key={ranker.rank} className="hover:bg-gray-50">
+                    <TableCell className="px-4 py-2 border-b text-center">
+                      {ranker.rank}
+                    </TableCell>
+                    <TableCell className="px-4 py-2 border-b">
+                      {ranker.name}
+                    </TableCell>
+                    <TableCell className="px-4 py-2 border-b text-right">
+                      {ranker.account}
+                    </TableCell>
+                    <TableCell className="px-4 py-2 border-b text-center">
+                      {ranker.contribution}
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 

@@ -105,11 +105,11 @@ const data = {
         },
       ],
     },
-    {
-      title: "Sign In",
-      url: "/signin",
-      icon: LogIn,
-    },
+    // {
+    //   title: "Sign In",
+    //   url: "/signin",
+    //   icon: LogIn,
+    // },
     {
       title: "Sign up",
       url: "/signup",
@@ -142,7 +142,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">BN DAO</span>
-                  <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
             </SidebarMenuButton>
