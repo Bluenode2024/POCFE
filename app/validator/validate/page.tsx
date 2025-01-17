@@ -30,22 +30,51 @@ import AccessPrompt from "@/components/AccessPrompt";
 
 const ValidatePage = () => {
   const [isDepositConfirmed, setIsDepositConfirmed] = useState<boolean | null>(null);
+  const [isCheckingValidator, setIsCheckingValidator] = useState(false); // Validator 팝업 상태 추가
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
   const [validatedTaskIds, setValidatedTaskIds] = useState<string[]>([]);
 
   const { handleDeposit } = useContractInteraction(setIsDepositConfirmed);
+  const { toast } = useToast(); // Toast 사용
 
   const handleConfirmDeposit = async () => {
     await handleDeposit(depositAmount);
   };
 
+  // Validator 체크 완료 시 팝업 종료 및 Toast 메시지 표시
+  useEffect(() => {
+    if (isDepositConfirmed) {
+      setIsCheckingValidator(true); // Validator 팝업 표시
+      const timer = setTimeout(() => {
+        setIsCheckingValidator(false); // 팝업 종료
+        toast({
+          title: "✅ Checking Completed",
+          description: "Validator has been successfully checked.",
+          variant: "success",
+        });
+      }, 2000); // 2초 후 팝업 종료 및 Toast 호출
+      return () => clearTimeout(timer);
+    }
+  }, [isDepositConfirmed, toast]);
+
   const pendingTasks = tasks.filter((task) => task.validateStatus === "Pending");
   const validatedTasks = tasks.filter((task) => task.validateStatus === "Validated");
-  const { toast } = useToast();
 
   return (
     <div className="relative flex flex-col gap-10 p-4 h-screen">
+      {/* Validator 팝업 */}
+      {isCheckingValidator && (
+        <div className="absolute inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg text-center w-[90%] max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-blue-600">
+              Checking Validator
+            </h2>
+            <p className="text-gray-700">Please wait while we're checking..</p>
+          </div>
+        </div>
+      )}
+
       <AccessPrompt
         isDepositConfirmed={isDepositConfirmed}
         depositAmount={depositAmount}
@@ -229,3 +258,4 @@ const ValidatePage = () => {
 };
 
 export default ValidatePage;
+

@@ -38,7 +38,7 @@ const AccessPrompt = ({
 
         <h2 className="text-xl font-bold mb-4 text-red-600 mt-6">Deposit Required</h2>
         <p className="mb-4 text-gray-700">
-          To start validating tasks, please deposit the required amount into the contract.
+          Deposit the required amount to start validating tasks.
         </p>
         <div className="mb-4">
           <input
