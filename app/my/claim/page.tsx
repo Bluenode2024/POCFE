@@ -27,9 +27,19 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useState, useEffect } from "react";
+import { useReadContract, useWriteContract, useAccount } from "wagmi";
+import BNS_ABI from "@/abi/IBND.abi";
 
-// Chart.js 구성 등록
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+
+interface UserInfo {
+  addr: string;
+  score: number;
+  isValidator: boolean;
+  isReporter: boolean;
+}
 
 const Dashboard = () => {
   const today = new Date().toLocaleDateString("en-US", {
@@ -42,7 +52,40 @@ const Dashboard = () => {
   const projectId = "1"; // 현재 프로젝트 ID
   const filteredTasks = tasks.filter((task) => task.project_id === projectId);
 
-  // 하드코딩으로 추가할 데이터
+  const { address } = useAccount();
+  const { writeContract } = useWriteContract();
+  const [score, setScore] = useState<number | null>(null);
+
+  const handleClaim = async () => {
+    try {
+      console.log("Initiating deposit with amount:");
+      await writeContract({
+        abi: BNS_ABI,
+        address: "0xA499CaD0aBc424A6E6770871647BdEe4e9777D8C",
+        functionName: "claim",
+        args: [address],
+      });
+    } catch (error) {
+      console.error("Error during deposit:", error);
+    }
+  };
+
+  const { data: userInfo } = useReadContract({
+    address: "0xA499CaD0aBc424A6E6770871647BdEe4e9777D8C",
+    abi: BNS_ABI,
+    functionName: "users",
+    args: [address],
+  }) as { data: any[] | undefined }; 
+
+  useEffect(() => {
+    if (userInfo && Array.isArray(userInfo)) {
+      const [, userScore] = userInfo;
+      setScore(Number(userScore));
+      console.log("User Info:", userInfo);
+      console.log("User Score:", userScore);
+    }
+  }, [userInfo]);
+
   const hardcodedTasks = [
     {
       id: "201",
@@ -250,11 +293,17 @@ const Dashboard = () => {
             <div className="mt-4 text-left">
               <p className="text-lg font-semibold">Total: ${totalAmount.toLocaleString()}</p>
             </div>
+            <div>
+              you can earn {score !== null ? `${score} USDT` : "loading..."}
+            </div>
           </CardContent>
         </Card>
 
         {/* Claim Button */}
-        <Button className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-lg">
+        <Button 
+        className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-lg"
+        onClick={handleClaim}
+        >
           Claim
         </Button>
       </div>
