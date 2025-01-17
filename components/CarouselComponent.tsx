@@ -29,7 +29,7 @@ export default function CarouselComponent({ images }: CarouselComponentProps) {
         const nextIndex = (api.selectedScrollSnap() + 1) % count;
         api.scrollTo(nextIndex);
       }
-    }, 3000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [api, count]);

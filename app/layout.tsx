@@ -35,10 +35,9 @@ export default async function RootLayout({
           </SidebarProvider>
 
           <main className="flex-1 flex flex-col overflow-auto bg-gray-100">
-            <ContextProvider cookies={cookies}>
-              {children}
-            </ContextProvider>
+            <ContextProvider cookies={cookies}>{children}</ContextProvider>
           </main>
+          <Toaster />
         </div>
 
         {/* Toaster 컴포넌트를 추가하여 Toast 메시지를 전역적으로 사용할 수 있도록 설정 */}

@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "abi/BNS.abi.js"
+    "abi/IBND.abi.js"
   ],
   "exclude": [
     "node_modules"
