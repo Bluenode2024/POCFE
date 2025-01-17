@@ -5,13 +5,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
 import { headers } from "next/headers";
 import ContextProvider from "@/context";
-
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -41,8 +40,10 @@ export default async function RootLayout({
             </ContextProvider>
           </main>
         </div>
+
+        {/* Toaster 컴포넌트를 추가하여 Toast 메시지를 전역적으로 사용할 수 있도록 설정 */}
+        <Toaster />
       </body>
     </html>
   );
 }
-
