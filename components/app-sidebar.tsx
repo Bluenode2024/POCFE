@@ -73,6 +73,10 @@ const data = {
           title: "Validate",
           url: "/validator/validate",
         },
+        {
+          title: "Reports",
+          url: "/validator/report",
+        },
       ],
     },
     {

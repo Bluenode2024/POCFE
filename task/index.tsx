@@ -13,6 +13,7 @@ export interface ProjectTask {
   status: string; // task_status
   priority: string; // priority
   validateStatus: "Not Uploaded" | "Pending" | "Validated" | "Rejected"; // 추가된 속성
+  rejected_reason: string; // 거부된 이유
 }
 
 export const tasks: ProjectTask[] = [
@@ -26,13 +27,14 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "Significant effort was invested to ensure the highest quality.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-01T10:30:00Z",
     deadline: "2024-11-15T18:00:00Z",
     assigned_users: ["박지호", "최세창"],
     status: "In Progress",
     priority: "High",
     validateStatus: "Not Uploaded", // 기본값
+    rejected_reason: "",
   },
   {
     id: "102",
@@ -43,13 +45,14 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "This task reflects diligent work and a commitment to excellence.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-02T11:00:00Z",
     deadline: "2024-11-20T18:00:00Z",
     assigned_users: ["김재원", "박지호"],
     status: "In Progress",
     priority: "High",
     validateStatus: "Pending",
+    rejected_reason: "",
   },
   {
     id: "103",
@@ -60,13 +63,14 @@ export const tasks: ProjectTask[] = [
     task_url:
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
-    additionalNotes: "Efforts were meticulously focused to meet project specifications.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-03T12:00:00Z",
     deadline: "2024-11-25T18:00:00Z",
     assigned_users: ["정원필", "박지호"],
     status: "Pending",
     priority: "Medium",
     validateStatus: "Rejected",
+    rejected_reason: "증거 부족",
   },
   // 탈중앙화 투표 시스템 구축 (Project ID: 2)
   {
@@ -79,13 +83,14 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "Work demonstrates exceptional dedication and quality.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-02T13:00:00Z",
     deadline: "2024-11-22T23:59:00Z",
     assigned_users: ["김승원", "박소연"],
     status: "In Progress",
     priority: "High",
     validateStatus: "Validated",
+    rejected_reason: "",
   },
   {
     id: "202",
@@ -97,13 +102,14 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "The task underscores the importance of precision and accuracy.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-03T14:00:00Z",
     deadline: "2024-11-28T23:59:00Z",
     assigned_users: ["정원필", "김재원"],
     status: "Pending",
     priority: "Medium",
     validateStatus: "Not Uploaded",
+    rejected_reason: "",
   },
   {
     id: "203",
@@ -115,13 +121,14 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "Careful attention to detail was given throughout the task.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-04T15:00:00Z",
     deadline: "2024-12-01T23:59:00Z",
     assigned_users: ["박소연", "최세창"],
     status: "Pending",
     priority: "Medium",
     validateStatus: "Pending",
+    rejected_reason: "",
   },
   // ZKP(영지식 증명) 라이브러리 검증 (Project ID: 3)
   {
@@ -134,13 +141,14 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "The analysis reflects a comprehensive approach to security.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-05T10:30:00Z",
     deadline: "2024-11-15T17:00:00Z",
     assigned_users: ["최세창", "김재원"],
     status: "In Progress",
     priority: "High",
     validateStatus: "Validated",
+    rejected_reason: "",
   },
   {
     id: "302",
@@ -152,13 +160,14 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "The review process emphasized both quality and security.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-06T11:00:00Z",
     deadline: "2024-11-20T17:00:00Z",
     assigned_users: ["김재원", "박소연"],
     status: "Pending",
     priority: "Medium",
     validateStatus: "Rejected",
+    rejected_reason: "파일 미첨부",
   },
   {
     id: "303",
@@ -170,12 +179,13 @@ export const tasks: ProjectTask[] = [
       "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MThfMjAg%2FMDAxNzIxMjYxNDMxNDQ5.D4ln68rtDMQCQGCatBVZxxQNOfaumyqTLRoNGSf_hWMg.optD5WvsKWgFDXToOIMJEhilyzRi8r8xD5mRUPekuk0g.JPEG%2FIMG_8080.jpg&type=a340",
     files: [],
 
-    additionalNotes: "The design exemplifies a meticulous and thorough approach.",
+    additionalNotes: "진짜 열심히 했습니다..",
     created_at: "2024-11-07T12:00:00Z",
     deadline: "2024-11-25T17:00:00Z",
     assigned_users: ["박소연", "정원필"],
     status: "Pending",
     priority: "Low",
     validateStatus: "Not Uploaded",
+    rejected_reason: "",
   },
 ];
