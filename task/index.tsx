@@ -135,7 +135,7 @@ export const tasks: ProjectTask[] = [
     priority: "Medium",
     validateStatus: "Pending",
     rejected_reason: "",
-    validator: "이찬호호",
+    validator: "이찬호",
   },
   // ZKP(영지식 증명) 라이브러리 검증 (Project ID: 3)
   {
@@ -156,7 +156,7 @@ export const tasks: ProjectTask[] = [
     priority: "High",
     validateStatus: "Validated",
     rejected_reason: "",
-    validator: "이재원원",
+    validator: "이재원",
   },
   {
     id: "302",
