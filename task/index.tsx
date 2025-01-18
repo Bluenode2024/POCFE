@@ -14,6 +14,7 @@ export interface ProjectTask {
   priority: string; // priority
   validateStatus: "Not Uploaded" | "Pending" | "Validated" | "Rejected"; // 추가된 속성
   rejected_reason: string; // 거부된 이유
+  validator: string;
 }
 
 export const tasks: ProjectTask[] = [
@@ -35,6 +36,7 @@ export const tasks: ProjectTask[] = [
     priority: "High",
     validateStatus: "Not Uploaded", // 기본값
     rejected_reason: "",
+    validator: "",
   },
   {
     id: "102",
@@ -53,6 +55,7 @@ export const tasks: ProjectTask[] = [
     priority: "High",
     validateStatus: "Pending",
     rejected_reason: "",
+    validator: "정원필",
   },
   {
     id: "103",
@@ -71,6 +74,7 @@ export const tasks: ProjectTask[] = [
     priority: "Medium",
     validateStatus: "Rejected",
     rejected_reason: "증거 부족",
+    validator: "김승원",
   },
   // 탈중앙화 투표 시스템 구축 (Project ID: 2)
   {
@@ -91,6 +95,7 @@ export const tasks: ProjectTask[] = [
     priority: "High",
     validateStatus: "Validated",
     rejected_reason: "",
+    validator: "박지호",
   },
   {
     id: "202",
@@ -110,6 +115,7 @@ export const tasks: ProjectTask[] = [
     priority: "Medium",
     validateStatus: "Not Uploaded",
     rejected_reason: "",
+    validator: "",
   },
   {
     id: "203",
@@ -129,6 +135,7 @@ export const tasks: ProjectTask[] = [
     priority: "Medium",
     validateStatus: "Pending",
     rejected_reason: "",
+    validator: "이찬호호",
   },
   // ZKP(영지식 증명) 라이브러리 검증 (Project ID: 3)
   {
@@ -149,6 +156,7 @@ export const tasks: ProjectTask[] = [
     priority: "High",
     validateStatus: "Validated",
     rejected_reason: "",
+    validator: "이재원원",
   },
   {
     id: "302",
@@ -168,6 +176,7 @@ export const tasks: ProjectTask[] = [
     priority: "Medium",
     validateStatus: "Rejected",
     rejected_reason: "파일 미첨부",
+    validator: "김재원",
   },
   {
     id: "303",
@@ -187,5 +196,6 @@ export const tasks: ProjectTask[] = [
     priority: "Low",
     validateStatus: "Not Uploaded",
     rejected_reason: "",
+    validator: "",
   },
 ];

@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { tasks, ProjectTask } from "@/task";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -27,23 +26,175 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-const ValidateReportPage = () => {
+const ValidatePage = () => {
+  const isDepositConfirmed = true;
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
-  const [validatedTaskIds, setValidatedTaskIds] = useState<string[]>([]);
-  const [dialogInput, setDialogInput] = useState<string>("");
-  const { toast } = useToast(); // Toast 사용
-  const validatedTasks = tasks.filter(
+  const [updatedTasks, setUpdatedTasks] = useState<ProjectTask[]>(tasks); // 기존 테스크 복사
+
+  const pendingTasks = updatedTasks.filter(
+    (task) => task.validateStatus === "Pending"
+  );
+  const validatedTasks = updatedTasks.filter(
     (task) =>
       task.validateStatus === "Validated" || task.validateStatus === "Rejected"
   );
-  useEffect(() => {
-    if (!selectedTask) {
-      setDialogInput(""); // selectedTask가 변경될 때만 초기화
-    }
-  }, [selectedTask]);
+  const { toast } = useToast();
+
+  const handleUpdateStatus = (
+    taskId: string,
+    status: "Validated" | "Rejected"
+  ) => {
+    setUpdatedTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, validateStatus: status } : task
+      )
+    );
+    toast({
+      title: `Task ${status === "Validated" ? "Validated" : "Rejected"}!`,
+      description: `The task has been marked as ${status}.`,
+    });
+  };
 
   return (
     <div className="relative flex flex-col gap-10 p-4 h-screen">
+      {!isDepositConfirmed && (
+        <div className="absolute inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg text-center w-[90%] max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-red-600 mt-6">
+              Deposit Required
+            </h2>
+            <p className="mb-4 text-gray-700">
+              To start validating tasks, please deposit the required amount into
+              the contract.
+            </p>
+            <Button
+              size="sm"
+              className="bg-red-500 text-white hover:bg-red-600"
+              onClick={() => console.log("Deposit confirmed")}
+            >
+              Confirm Deposit
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <Card className="w-full rounded-lg shadow-md">
+        <CardHeader>
+          <CardTitle>Validate List</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4 text-lg font-semibold text-blue-600">
+            Pending Tasks! Waiting for your validation!
+          </div>
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Task Title</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Deadline</TableHead>
+                <TableHead>Validate Status</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {pendingTasks.length > 0 ? (
+                pendingTasks.map((task) => (
+                  <TableRow key={task.id}>
+                    <TableCell>{task.title}</TableCell>
+                    <TableCell>{task.description}</TableCell>
+                    <TableCell>
+                      {new Date(task.deadline).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        style={{ marginLeft: "12px" }}
+                      >
+                        {task.validateStatus}
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        {/* Validate Button */}
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button
+                              size="sm"
+                              variant="success"
+                              className="w-full"
+                            >
+                              Validate
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Validate Task</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to validate this task?
+                                This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleUpdateStatus(task.id, "Validated")
+                                }
+                              >
+                                Confirm
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+
+                        {/* Reject Button */}
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="w-full"
+                            >
+                              Reject
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Reject Task</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to reject this task? This
+                                action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleUpdateStatus(task.id, "Rejected")
+                                }
+                              >
+                                Confirm
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No Pending Tasks
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
       <Card className="w-full rounded-lg shadow-md">
         <CardHeader>
           <CardTitle>Validated List</CardTitle>
@@ -54,9 +205,8 @@ const ValidateReportPage = () => {
               <TableRow>
                 <TableHead>Task Title</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Report Deadline</TableHead>
+                <TableHead>Deadline</TableHead>
                 <TableHead>Validate Status</TableHead>
-                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -72,140 +222,10 @@ const ValidateReportPage = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        style={{ marginLeft: "15px" }}
+                        style={{ marginLeft: "12px" }}
                       >
                         {task.validateStatus}
                       </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => {
-                              setSelectedTask(task);
-                              setDialogInput(""); // 기존 입력값 초기화
-                            }}
-                          >
-                            Report
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent
-                          className="focus:outline-none"
-                          onOpenAutoFocus={(e) => e.preventDefault()}
-                        >
-                          <h2 className="text-xl font-bold mb-4">
-                            Proof Details
-                          </h2>
-                          <p className="mb-4">
-                            <strong>Task:</strong> {selectedTask?.title}
-                          </p>
-                          <p className="mb-4">
-                            <strong>Description:</strong>{" "}
-                            {selectedTask?.description}
-                          </p>
-                          <p className="mb-4">
-                            <strong>Image URL:</strong>{" "}
-                            <a
-                              href={selectedTask?.task_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 underline break-all"
-                            >
-                              {selectedTask?.task_url}
-                            </a>
-                          </p>
-                          <p className="mb-4">
-                            <strong>Files:</strong>
-                            {selectedTask?.files?.length
-                              ? selectedTask.files.map((file, index) => (
-                                  <a
-                                    key={index}
-                                    href={URL.createObjectURL(file)} // 파일을 브라우저에서 열 수 있도록 URL 생성
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block text-blue-500 underline break-all mt-2"
-                                  >
-                                    {file.name}
-                                  </a>
-                                ))
-                              : "No files uploaded"}
-                          </p>
-                          <p className="mb-4">
-                            <strong>Additional Note:</strong>{" "}
-                            {selectedTask?.additionalNotes}
-                          </p>
-
-                          {selectedTask?.validateStatus === "Rejected" && (
-                            <p className="mb-4">
-                              <strong>Rejected Reason:</strong>{" "}
-                              {selectedTask?.rejected_reason ||
-                                "No reason provided"}
-                            </p>
-                          )}
-                          <AlertDialog>
-                            <AlertDialogTrigger
-                              className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                                validatedTaskIds.includes(task.id)
-                                  ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 검증된 경우 회색 버튼
-                                  : "bg-black text-white hover:bg-gray-800 focus:ring-gray-700" // 기본 상태
-                              }`}
-                              disabled={validatedTaskIds.includes(task.id)} // 버튼 비활성화
-                            >
-                              Report
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This action cannot be undone. If there are
-                                  issues with your report, you may lose your
-                                  deposit.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <div className="mb-4">
-                                <Label
-                                  htmlFor="reportInput"
-                                  className="text-sm font-medium text-gray-700"
-                                >
-                                  <strong>Enter Report reason:</strong>
-                                </Label>
-                                <textarea
-                                  id="reportInput"
-                                  value={dialogInput}
-                                  onChange={(e) =>
-                                    setDialogInput(e.target.value)
-                                  }
-                                  placeholder="Enter your reason for reporting..."
-                                  className="w-full mt-2 px-3 py-2 border rounded-md"
-                                />
-                              </div>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => {
-                                    if (selectedTask) {
-                                      setValidatedTaskIds((prev) => [
-                                        ...prev,
-                                        selectedTask.id,
-                                      ]); // 검증된 테스크 ID 추가
-
-                                      toast({
-                                        title: "report: Success!",
-                                      });
-                                    }
-                                  }}
-                                >
-                                  Submit
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </DialogContent>
-                      </Dialog>
                     </TableCell>
                   </TableRow>
                 ))
@@ -224,4 +244,4 @@ const ValidateReportPage = () => {
   );
 };
 
-export default ValidateReportPage;
+export default ValidatePage;

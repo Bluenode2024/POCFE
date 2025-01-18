@@ -29,17 +29,34 @@ import { useContractInteraction } from "@/components/ContractInteraction";
 import AccessPrompt from "@/components/AccessPrompt";
 
 const ValidatePage = () => {
-  const [isDepositConfirmed, setIsDepositConfirmed] = useState<boolean | null>(null);
-  const [isCheckingValidator, setIsCheckingValidator] = useState(false); // Validator 팝업 상태 추가
+  const [isDepositConfirmed, setIsDepositConfirmed] = useState<boolean | null>(
+    null
+  );
+  const [isCheckingValidator, setIsCheckingValidator] = useState(false);
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
-  const [validatedTaskIds, setValidatedTaskIds] = useState<string[]>([]);
+  const [tasksList, setTasksList] = useState<ProjectTask[]>(tasks); // Tasks 상태 관리
 
   const { handleDeposit } = useContractInteraction(setIsDepositConfirmed);
-  const { toast } = useToast(); // Toast 사용
+  const { toast } = useToast();
 
   const handleConfirmDeposit = async () => {
     await handleDeposit(depositAmount);
+  };
+
+  const updateTaskStatus = (
+    taskId: string,
+    status: "Validated" | "Rejected"
+  ) => {
+    setTasksList((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, validateStatus: status } : task
+      )
+    );
+    toast({
+      title: `"✅ Validate Completed"!`,
+      description: `The task has been ${status}.`,
+    });
   };
 
   // Validator 체크 완료 시 팝업 종료 및 Toast 메시지 표시
@@ -57,13 +74,16 @@ const ValidatePage = () => {
       return () => clearTimeout(timer);
     }
   }, [isDepositConfirmed, toast]);
-
-  const pendingTasks = tasks.filter((task) => task.validateStatus === "Pending");
-  const validatedTasks = tasks.filter((task) => task.validateStatus === "Validated");
+  const pendingTasks = tasksList.filter(
+    (task) => task.validateStatus === "Pending"
+  );
+  const validatedTasks = tasksList.filter(
+    (task) =>
+      task.validateStatus === "Validated" || task.validateStatus === "Rejected"
+  );
 
   return (
     <div className="relative flex flex-col gap-10 p-4 h-screen">
-      {/* Validator 팝업 */}
       {isCheckingValidator && (
         <div className="absolute inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm flex flex-col items-center justify-center z-50">
           <div className="relative bg-white p-6 rounded-lg shadow-lg text-center w-[90%] max-w-md">
@@ -103,7 +123,9 @@ const ValidatePage = () => {
                   <TableRow key={task.id}>
                     <TableCell>{task.title}</TableCell>
                     <TableCell>{task.description}</TableCell>
-                    <TableCell>{new Date(task.deadline).toLocaleString()}</TableCell>
+                    <TableCell>
+                      {new Date(task.deadline).toLocaleString()}
+                    </TableCell>
                     <TableCell>{task.validateStatus}</TableCell>
                     <TableCell>
                       <Dialog>
@@ -144,7 +166,7 @@ const ValidatePage = () => {
                               ? selectedTask.files.map((file, index) => (
                                   <a
                                     key={index}
-                                    href={URL.createObjectURL(file)} // 파일을 브라우저에서 열 수 있도록 URL 생성
+                                    href={URL.createObjectURL(file)}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="block text-blue-500 underline break-all mt-2"
@@ -158,49 +180,30 @@ const ValidatePage = () => {
                             <strong>Additional Note:</strong>{" "}
                             {selectedTask?.additionalNotes}
                           </p>
-                          <AlertDialog>
-                            <AlertDialogTrigger
-                              className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                                validatedTaskIds.includes(task.id)
-                                  ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 검증된 경우 회색 버튼
-                                  : "bg-black text-white hover:bg-gray-800 focus:ring-gray-700" // 기본 상태
-                              }`}
-                              disabled={validatedTaskIds.includes(task.id)} // 버튼 비활성화
+
+                          {/* Validate and Reject Buttons */}
+                          <div className="flex gap-2 mt-4">
+                            <Button
+                              size="lg" // 버튼 크기를 키움
+                              variant="default"
+                              className="w-1/2"
+                              onClick={() =>
+                                updateTaskStatus(task.id, "Validated")
+                              }
                             >
                               Validate
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This action cannot be undone. If there are
-                                  issues with your validation, you may lose your
-                                  deposit.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => {
-                                    if (selectedTask) {
-                                      setValidatedTaskIds((prev) => [
-                                        ...prev,
-                                        selectedTask.id,
-                                      ]); // 검증된 테스크 ID 추가
-
-                                      toast({
-                                        title: "Validate: Success!",
-                                      });
-                                    }
-                                  }}
-                                >
-                                  Continue
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                            </Button>
+                            <Button
+                              size="lg" // 버튼 크기를 키움
+                              variant="outline"
+                              className="w-1/2"
+                              onClick={() =>
+                                updateTaskStatus(task.id, "Rejected")
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </div>
                         </DialogContent>
                       </Dialog>
                     </TableCell>
@@ -238,7 +241,9 @@ const ValidatePage = () => {
                   <TableRow key={task.id}>
                     <TableCell>{task.title}</TableCell>
                     <TableCell>{task.description}</TableCell>
-                    <TableCell>{new Date(task.deadline).toLocaleString()}</TableCell>
+                    <TableCell>
+                      {new Date(task.deadline).toLocaleString()}
+                    </TableCell>
                     <TableCell>{task.validateStatus}</TableCell>
                   </TableRow>
                 ))
@@ -258,4 +263,3 @@ const ValidatePage = () => {
 };
 
 export default ValidatePage;
-
