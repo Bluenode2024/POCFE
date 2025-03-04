@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,44 +24,39 @@ export default function Signup() {
     event.preventDefault();
     setLoading(true);
 
-    console.log("폼 제출됨");
-
-    // FormData로 입력값 가져오기
     const formData = new FormData(event.currentTarget);
     const data = {
-      username: formData.get("username") as string,
-      fullName: "Jiho",
+      // 서버 DTO가 name, studentNumber, department, walletAddress 등을 기대한다면 이렇게 맞춤
+      name: formData.get("username") as string,        // username -> name
+      studentNumber: formData.get("studentId") as string, // studentId -> studentNumber
       department: formData.get("department") as string,
-      walletAddress: "0x223456789012345678901234567890123456787",
-      studentId: formData.get("studentId") as string,
+      walletAddress: address,
     };
-
-    alert("로그인 성공");
 
     console.log("전송 데이터:", data);
 
-    // try {
-    //   const response = await fetch("http://localhost:3001/auth/register", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
+    try {
+      const response = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    //   if (!response.ok) {
-    //     throw new Error("서버 응답 에러");
-    //   }
+      if (!response.ok) {
+        throw new Error("서버 응답 에러");
+      }
 
-    //   const result = await response.json();
-    //   console.log("서버 응답:", result);
-    //   alert("회원가입 성공!");
-    // } catch (error) {
-    //   console.error("회원가입 실패:", error);
-    //   alert("회원가입 실패!");
-    // } finally {
-    //   setLoading(false);
-    // }
+      const result = await response.json();
+      console.log("서버 응답:", result);
+      alert("회원가입 성공!");
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert("회원가입 실패!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

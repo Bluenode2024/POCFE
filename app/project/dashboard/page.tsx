@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { projects as projectData } from "@/projects";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,26 +12,58 @@ import {
   TableRow,
   TableHeader,
 } from "@/components/ui/table";
-import MyProjects from "@/components/MyProjects";
+// import MyProjects from "@/components/MyProjects"; // 기존 import는 남겨둬도 되고, 사용하지 않으므로 제거 가능
 
 export default function Dashboard() {
-  const [projects] = useState(projectData);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  // 진행 중인(= active) 프로젝트 목록
+  const [ongoingProjects, setOngoingProjects] = useState<any[]>([]);
+  // 내 프로젝트 목록
+  const [myProjects, setMyProjects] = useState<any[]>([]);
+  // 로딩 상태
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
+
+  // 예시 지갑 주소
+  const walletAddress = "0xCD45f153325FB6A51cC23db8051c6dDD886f2a63";
+  // 예시 사용자 이름
   const username = "김재원";
 
-  const ongoingProjects = projects.filter(
-    (project) => project.status === "Processing"
-  );
+  useEffect(() => {
+    fetchAllData();
+  }, []);
 
-  const myProjects = projects.filter(
-    (project) =>
-      project.leader_id === "김재원" || project.leader_id === "김승원"
-  );
+  async function fetchAllData() {
+    setIsLoading(true);
+    try {
+      // 1) 진행 중인 프로젝트(= active) 목록
+      let response = await fetch("http://localhost:3001/projects/status/active");
+      if (!response.ok) {
+        throw new Error("Failed to fetch ongoing projects");
+      }
+      let activeData = await response.json();
+      activeData = Array.isArray(activeData) ? activeData : [activeData];
+      setOngoingProjects(activeData);
+
+      // 2) 내 프로젝트 목록 (API 문서: GET /projects/myproject)
+      response = await fetch("http://localhost:3001/projects/myproject");
+      if (!response.ok) {
+        throw new Error("Failed to fetch my projects");
+      }
+      let myData = await response.json();
+      myData = Array.isArray(myData) ? myData : [myData];
+      setMyProjects(myData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-7xl">
+        {/* ─────────── 1) 진행 중인 프로젝트 섹션 (수정 X) ─────────── */}
         <div className="p-4">
           <Card className="w-full rounded-lg shadow-md">
             <CardHeader>
@@ -52,17 +83,15 @@ export default function Dashboard() {
                   </TableHeader>
                   <TableBody>
                     {isLoading ? (
-                      // 로딩 중일 때 표시
                       <TableRow>
                         <TableCell colSpan={5} className="text-center">
                           Loading data...
                         </TableCell>
                       </TableRow>
                     ) : ongoingProjects.length > 0 ? (
-                      // 데이터가 있을 때
                       ongoingProjects.map((project) => (
                         <TableRow key={project.id}>
-                          <TableCell>{project.title}</TableCell>
+                          <TableCell>{project.project_name}</TableCell>
                           <TableCell>{project.description}</TableCell>
                           <TableCell>
                             {new Date(project.end_date).toLocaleString()}
@@ -76,7 +105,6 @@ export default function Dashboard() {
                         </TableRow>
                       ))
                     ) : (
-                      // 데이터가 없을 때 표시
                       <TableRow>
                         <TableCell colSpan={5} className="text-center">
                           No ongoing projects to display.
@@ -90,11 +118,67 @@ export default function Dashboard() {
           </Card>
         </div>
 
+        {/* ─────────── 2) 내 프로젝트 섹션 + 프로젝트 생성하기 (수정: MyProjects → 테이블) ─────────── */}
         <div className="flex flex-row p-4 gap-8">
           <div className="flex-[2]">
-            <MyProjects projects={projects} username={username} />
+            <Card className="w-full rounded-lg shadow-md">
+              <CardHeader>
+                <CardTitle>내 프로젝트</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+                  <Table className="w-full">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Project Title</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Deadline</TableHead>
+                        <TableHead>Leader</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            Loading data...
+                          </TableCell>
+                        </TableRow>
+                      ) : myProjects.length > 0 ? (
+                        myProjects.map((item) => {
+                          // API 응답 구조상, 각 요소에 project 필드가 있음
+                          const project = item.project;
+                          return (
+                            <TableRow key={project.id}>
+                              <TableCell>{project.project_name}</TableCell>
+                              <TableCell>{project.description}</TableCell>
+                              <TableCell>
+                                {new Date(project.end_date).toLocaleString()}
+                              </TableCell>
+                              <TableCell>{project.leader_id}</TableCell>
+                              <TableCell>
+                                <Button variant="outline" size="sm">
+                                  {project.status}
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            No my projects to display.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
+          {/* 프로젝트 생성하기 버튼 (수정 X) */}
           <div className="flex-[1] flex items-center justify-center">
             <Button
               size="sm"
@@ -109,7 +193,7 @@ export default function Dashboard() {
               onMouseLeave={(e) =>
                 (e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.5)")
               }
-              onClick={() => router.push(`/project/generate`)}
+              onClick={() => router.push("/project/generate")}
             >
               프로젝트 생성하기
             </Button>
