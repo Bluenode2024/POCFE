@@ -117,7 +117,7 @@ export default function Login() {
         </div>
         <div className="mt-4 text-center">
           <p className="text-center text-sm text-gray-500">
-            Don't have an account yet?
+            Don&apos;t have an account yet?
             <Button
               variant="link"
               className="text-blue-600 hover:underline p-0 m-0 ml-1 border-none bg-transparent cursor-pointer"

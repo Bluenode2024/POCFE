@@ -14,11 +14,26 @@ import {
 } from "@/components/ui/table";
 // import MyProjects from "@/components/MyProjects"; // 기존 import는 남겨둬도 되고, 사용하지 않으므로 제거 가능
 
+// 프로젝트 타입 정의
+interface Project {
+  id: number;
+  project_name: string;
+  description: string;
+  end_date: string;
+  leader_id: string;
+  status: string;
+}
+
+// MyProject 인터페이스 추가
+interface MyProject {
+  project: Project;  // API 응답에서 project 필드 안에 Project 정보가 있음
+}
+
 export default function Dashboard() {
   // 진행 중인(= active) 프로젝트 목록
-  const [ongoingProjects, setOngoingProjects] = useState<any[]>([]);
+  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([]);
   // 내 프로젝트 목록
-  const [myProjects, setMyProjects] = useState<any[]>([]);
+  const [myProjects, setMyProjects] = useState<MyProject[]>([]);  // MyProject 타입으로 변경
   // 로딩 상태
   const [isLoading, setIsLoading] = useState(false);
 

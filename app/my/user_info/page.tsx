@@ -4,14 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableHeader,
-} from "@/components/ui/table";
+import { Table, TableBody } from "@/components/ui/table";
 import MyProjects from "@/components/MyProjects";
 import { projects } from "@/projects";
 

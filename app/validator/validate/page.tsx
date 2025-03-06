@@ -11,27 +11,26 @@ import {
   TableHeader,
 } from "@/components/ui/table";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useContractInteraction } from "@/components/ContractInteraction";
 import AccessPrompt from "@/components/AccessPrompt";
 
 const ValidatePage = () => {
-  const [isDepositConfirmed, setIsDepositConfirmed] = useState<boolean | null>(
-    null
-  );
+  const [isDepositConfirmed, setIsDepositConfirmed] = useState<boolean | null>(null);
   const [isCheckingValidator, setIsCheckingValidator] = useState(false);
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
@@ -41,12 +40,12 @@ const ValidatePage = () => {
   const { toast } = useToast();
 
   const handleConfirmDeposit = async () => {
-    await handleDeposit(depositAmount);
+    await handleDeposit(depositAmount);  // 문자열로 직접 전달
   };
 
   const updateTaskStatus = (
     taskId: string,
-    status: "Validated" | "Rejected"
+    status: ProjectTask['validateStatus'] 
   ) => {
     setTasksList((prevTasks) =>
       prevTasks.map((task) =>
@@ -54,7 +53,7 @@ const ValidatePage = () => {
       )
     );
     toast({
-      title: `"✅ Validate Completed"!`,
+      title: "✅ Validate Completed!",
       description: `The task has been ${status}.`,
     });
   };
@@ -68,7 +67,7 @@ const ValidatePage = () => {
         toast({
           title: "✅ Checking Completed",
           description: "Validator has been successfully checked.",
-          variant: "success",
+          variant: "default",
         });
       }, 2000); // 2초 후 팝업 종료 및 Toast 호출
       return () => clearTimeout(timer);
@@ -90,7 +89,7 @@ const ValidatePage = () => {
             <h2 className="text-xl font-bold mb-4 text-blue-600">
               Checking Validator
             </h2>
-            <p className="text-gray-700">Please wait while we're checking..</p>
+            <p className="text-gray-700">Please wait while we are checking..</p>
           </div>
         </div>
       )}
@@ -139,9 +138,12 @@ const ValidatePage = () => {
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
-                          <h2 className="text-xl font-bold mb-4">
-                            Proof Details
-                          </h2>
+                          <DialogHeader>
+                            <DialogTitle>Task Validation</DialogTitle>
+                            <DialogDescription>
+                              Here is the task validation information.
+                            </DialogDescription>
+                          </DialogHeader>
                           <p className="mb-4">
                             <strong>Task:</strong> {selectedTask?.title}
                           </p>

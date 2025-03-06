@@ -12,6 +12,16 @@ import {
 } from "@/components/ui/table";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
+// POC 엔트리의 타입 정의
+interface POCEntry {
+  description: string;
+  // 다른 필요한 필드들도 추가
+  id?: string;
+  title?: string;
+  status?: string;
+  date?: string;
+}
+
 const data = [
   { item: "대형 프로젝트", type: "Project", contribution: "min: 24 / max: 120", description: "개발자 4명 / 평균 6개월" },
   { item: "중형 프로젝트", type: "Project", contribution: "min: 12 / max: 60", description: "평균 2-3명 / 평균 2개월" },
@@ -51,7 +61,8 @@ const data = [
 const Page = () => {
   const [detail, setDetail] = useState("");
 
-  const handleDetail = (entry) => {
+  // entry 파라미터에 타입 추가
+  const handleDetail = (entry: POCEntry) => {
     setDetail(entry.description);
   };
 
@@ -81,7 +92,7 @@ const Page = () => {
                     <DialogTrigger asChild>
                       <Button
                         className="bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-lg"
-                        onClick={() => handleDetail(entry)}>
+                        onClick={() => handleDetail(entry as POCEntry)}>
                         In Detail
                       </Button>
                     </DialogTrigger>

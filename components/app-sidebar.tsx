@@ -22,7 +22,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-const userRole = "Admin"; // "admin" 또는 "user"로 설정
+
+// userRole 타입 정의
+type UserRole = "Admin" | "user";
+
+const userRole: UserRole = "Admin"; // "Admin" 또는 "user"로 설정
 const isLoggedIn = false; // 로그인 상태 여부
 
 const data = {
@@ -125,7 +129,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // 필터링된 사이드바 항목 생성
   const filteredNavMain = data.navMain.filter((item) => {
-    if (item.title === "Admin" && userRole == "user") {
+    if (item.title === "Admin" && userRole === "user") {  // === 연산자 사용
       return false; // 일반 유저는 Admin 항목을 보지 못함
     }
     if ((item.title === "Sign In" || item.title === "Sign up") && isLoggedIn) {

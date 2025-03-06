@@ -16,7 +16,52 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
+
+interface Project {
+  id: string;
+  project_name: string;
+  description: string;
+  deadline: string;
+  leader: string;
+  status: string;
+}
+
+interface ProjectData {
+  title: string;
+  description: string;
+  deadline: Date;
+  budget: number;
+  members: string[];
+}
+
+interface ProjectFormData {
+  title: string;
+  description: string;
+  deadline: string;
+  members: string[];
+  budget: number;
+  // 필요한 다른 필드들 추가
+}
+
+interface SubmitResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    projectId: string;
+    status: string;
+  };
+}
+
+interface ProjectSubmitData {
+  title: string;
+  description: string;
+  deadline: string;
+  members: string[];
+  budget: number;
+  taskCount: number;
+  rewardPerTask: number;
+}
 
 export default function Generate() {
   const [loading, setLoading] = useState(false);
@@ -52,67 +97,68 @@ export default function Generate() {
     }
   };
 
-  // 폼 전송 시 API 호출 (프로젝트 생성)
-  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+  // projects 상태의 타입을 명확하게 지정
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  // 폼 제출 핸들러 수정
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<SubmitResponse> => {
     event.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(event.currentTarget);
-
-    const data = {
-      project_name: formData.get("title") as string,
-      description: formData.get("Description") as string,
-      start_date: startDate ? startDate.toISOString().split("T")[0] : "",
-      end_date: endDate ? endDate.toISOString().split("T")[0] : "",
-      members: members.map((member) => ({
-        member_name: member,
-        role: "developer", // 예시 역할
-      })),
-      repo_link: ["https://github.com/example1", "https://github.com/example2"],
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    
+    const projectData: ProjectData = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      deadline: endDate || new Date(),
+      budget: Number(formData.get('budget')) || 0,
+      members: members,
     };
-
-    console.log("전송 데이터:", data);
 
     try {
       const response = await fetch("http://localhost:3001/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // JWT 토큰 포함
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(projectData),
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("서버 에러 응답:", errorText);
-        throw new Error("서버 응답 에러");
+        throw new Error(await response.text());
       }
 
       const result = await response.json();
-      console.log("서버 응답:", result);
-      alert("프로젝트가 성공적으로 생성되었습니다!");
+      
+      return {
+        success: true,
+        message: "프로젝트가 성공적으로 생성되었습니다!",
+        data: {
+          projectId: result.projectId,
+          status: result.status,
+        },
+      };
     } catch (error) {
-      console.error("프로젝트 생성 실패:", error);
-      alert("프로젝트 생성에 실패했습니다. 다시 시도해주세요.");
+      if (error instanceof Error) {
+        console.error('Submit error:', error.message);
+      }
+      return {
+        success: false,
+        message: "프로젝트 생성에 실패했습니다. 다시 시도해주세요.",
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // ====================== 추가된 부분: 내 프로젝트 조회 로직 ======================
-
-  // "내 프로젝트" 목록 상태
-  const [projects, setProjects] = useState<any[]>([]);
-
+  // 프로젝트 조회 함수 수정
   useEffect(() => {
-    // 실제로는 지갑 주소를 동적으로 가져와야 할 수도 있지만,
-    // 여기서는 예시로 하드코딩한 walletaddress 사용
-    const walletAddress = "0xc832e2C6cB5F6893134225B204Af8733edeC8e92";
+    const fetchUserAndProjects = async () => {
+      const walletAddress = "0xc832e2C6cB5F6893134225B204Af8733edeC8e92";
 
-    async function fetchUserAndProjects() {
       try {
-        // 1) 지갑 주소로 유저 정보 조회
         const userRes = await fetch(
           `http://localhost:3001/users/${walletAddress}`,
           {
@@ -121,44 +167,47 @@ export default function Generate() {
             },
           }
         );
+        
         if (!userRes.ok) {
           throw new Error("Failed to fetch user");
         }
+        
         const userData = await userRes.json();
-        const userId = userData.id; // 응답에서 user id 추출
-
-        // 2) 해당 userId로 프로젝트 목록 조회
-        //    API 문서에 맞게 엔드포인트 수정 (예: /projects?userId=...)
         const projectsRes = await fetch(
-          `http://localhost:3001/projects?userId=${userId}`,
+          `http://localhost:3001/projects?userId=${userData.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
+        
         if (!projectsRes.ok) {
           throw new Error("Failed to fetch projects");
         }
-        const projectsData = await projectsRes.json();
-
-        // projectsData가 배열 형태라고 가정
+        
+        const projectsData: Project[] = await projectsRes.json();
         setProjects(projectsData);
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          console.error('Fetch error:', error.message);
+        }
       }
-    }
+    };
 
     fetchUserAndProjects();
   }, []);
 
-  // ====================== 여기까지 추가된 부분 ======================
+  // any를 구체적인 타입으로 변경
+  const handleProjectSubmit = (data: ProjectFormData) => {
+    // ... 나머지 코드
+  };
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-gray-50 p-6">
       {/* 기존 프로젝트 생성 폼 */}
       <form
-        onSubmit={handleRegister}
+        onSubmit={handleSubmit}
         className="w-full max-w-md p-6 bg-white rounded-lg shadow-md mb-8"
       >
         <h1 className="text-xl font-semibold text-center mb-6">
@@ -177,10 +226,10 @@ export default function Generate() {
 
           {/* 프로젝트 설명 */}
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="Description">Project Description</Label>
+            <Label htmlFor="description">Project Description</Label>
             <Textarea
-              name="Description"
-              id="Description"
+              name="description"
+              id="description"
               placeholder="Write project detail here..."
             />
           </div>
