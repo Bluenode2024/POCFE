@@ -15,7 +15,7 @@ import {
 export default function Home() {
   const images = [
     {
-      src: "https://imgur.com/FUy6dyL.jpg",
+      src: "https://i.imgur.com/FUy6dyL.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">블루노드 정규 세션</div>
@@ -24,7 +24,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/1rf5guF.jpg",
+      src: "https://i.imgur.com/1rf5guF.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">
@@ -35,7 +35,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/y02IRK4.jpg",
+      src: "https://i.imgur.com/y02IRK4.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">2025 KOBAC BlueNode</div>
@@ -44,7 +44,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/08xTbmI.jpg",
+      src: "https://i.imgur.com/08xTbmI.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">Scroll 오픈세션</div>
@@ -53,7 +53,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/slfIvqa.jpg",
+      src: "https://i.imgur.com/slfIvqa.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">블루노드 방학 세션</div>
