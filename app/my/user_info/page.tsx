@@ -35,7 +35,7 @@ export default function MyPage() {
         // 로그인 후 발급받은 Bearer 토큰을 여기 넣어주세요.
         const token = "<YOUR_BEARER_TOKEN>";
 
-        const res = await fetch(`http://localhost:3001/users/id/${address}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/id/${address}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -117,7 +117,7 @@ export default function Generate() {
     };
 
     try {
-      const response = await fetch("http://localhost:3001/projects", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,7 +160,7 @@ export default function Generate() {
 
       try {
         const userRes = await fetch(
-          `http://localhost:3001/users/${walletAddress}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/users/${walletAddress}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -174,7 +174,7 @@ export default function Generate() {
         
         const userData = await userRes.json();
         const projectsRes = await fetch(
-          `http://localhost:3001/projects?userId=${userData.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/projects?userId=${userData.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

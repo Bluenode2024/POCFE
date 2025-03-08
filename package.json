@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-api": "swagger-typescript-api -p http://localhost:3001/api-json -o ./lib/api/generated"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -58,6 +59,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.18",
     "postcss": "^8.4.49",
+    "swagger-typescript-api": "^13.0.23",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2"
   },
