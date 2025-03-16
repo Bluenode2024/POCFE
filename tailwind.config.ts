@@ -9,6 +9,7 @@ const config = {
     "./app/**/*.{ts,tsx,jsx,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  
   prefix: "",
   theme: {
     container: {
@@ -19,6 +20,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Pretendard', 'sans-serif'],
+        pretendard: ['Pretendard', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -78,7 +83,8 @@ const config = {
       },
     },
   },
-  plugins: [animatePlugin, require("tailwindcss-animate")],
+  
+  plugins: [animatePlugin],
 } satisfies Config;
 
 export default config;
