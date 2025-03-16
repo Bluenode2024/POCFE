@@ -2,11 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation"; // router 추가
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody } from "@/components/ui/table";
-import MyProjects from "@/components/MyProjects";
-import { projects } from "@/projects";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { projects } from "@/projects"; // 그대로 두지만 사용하지 않음
+import { useGet } from "@/hooks/useRequest"; // useGet 훅 임포트
+import { api } from "@/lib/api/axios";       // axios 인스턴스 (토큰 설정용)
 
 interface UserData {
   name: string;
@@ -15,10 +24,21 @@ interface UserData {
   walletAddress: string;
 }
 
+// API 응답에 맞춘 내 프로젝트 인터페이스
+interface MyProject {
+  project: {
+    id: number;
+    project_name: string;
+    status: string;
+    end_date: string;
+  };
+}
+
 export default function MyPage() {
   const { address, isConnected } = useAccount();
+  const router = useRouter();
 
-  // API로부터 받아온 사용자 정보를 담을 state
+  // 사용자 정보 상태
   const [userData, setUserData] = useState<UserData>({
     name: "",
     department: "",
@@ -26,29 +46,38 @@ export default function MyPage() {
     walletAddress: "",
   });
 
-  // 컴포넌트가 마운트되거나 address가 바뀔 때마다 API 호출
+  // 내 프로젝트 데이터를 불러오기 위한 useGet 훅
+  const { data: myProjects, fetchData: fetchMyProject } = useGet<MyProject[]>();
+
+  // 1) 사용자 정보를 useGet 훅으로 받아오기 위한 준비
+  //    - data, fetchData 등을 구조분해 할당합니다.
+  const {
+    data: userInfoData,       // 실제 API에서 가져온 사용자 정보
+    fetchData: fetchUserInfo, // 호출 함수
+    error: userInfoError,
+    isLoading: userInfoLoading,
+  } = useGet<UserData>();
+
+  // 2) 사용자 정보 + 내 프로젝트 데이터 호출
   useEffect(() => {
+    // 주소/지갑이 없으면 요청하지 않음
+    if (!isConnected || !address) return;
+
+    // 사용자 정보 가져오기
     const fetchUserData = async () => {
-      if (!isConnected || !address) return;
-
       try {
-        // 로그인 후 발급받은 Bearer 토큰을 여기 넣어주세요.
-        const token = "<YOUR_BEARER_TOKEN>";
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/id/${address}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, // Bearer 토큰 추가
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch user data");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("❌ 토큰이 로컬 스토리지에 없습니다.");
+          return;
         }
 
-        const data = await res.json();
-        // API에서 반환되는 필드명에 맞춰서 세팅
+        // axios 인스턴스에 토큰 설정 (매 요청마다 헤더에 포함)
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        // /users/myinfo 엔드포인트 호출 (API 문서 참고)
+        const data = await fetchUserInfo("/users/myinfo");
+        // 응답 데이터를 state에 저장
         setUserData({
           name: data.name || "",
           department: data.department || "",
@@ -61,7 +90,10 @@ export default function MyPage() {
     };
 
     fetchUserData();
-  }, [isConnected, address]);
+
+    // 내 프로젝트 데이터 호출 (address가 유효할 때)
+    fetchMyProject("http://localhost:3001/projects/myproject");
+  }, [isConnected, address]); // fetchMyProject 제거 (무한루프 방지)
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -133,7 +165,7 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* 기여도 테이블 & 내 프로젝트 테이블 (수정 X) */}
+        {/* 기여도 테이블 & 내 프로젝트 테이블 */}
         <div className="flex gap-6">
           <Card className="p-4 flex-1 min-w-[30%]">
             <CardHeader>
@@ -145,7 +177,54 @@ export default function MyPage() {
               </div>
             </CardContent>
           </Card>
-          <MyProjects projects={projects} username={userData.name} />
+
+          {/* 내 프로젝트 섹션 (API 데이터로 표시) */}
+          <div className="p-4 flex-1">
+            <Card className="w-full rounded-lg shadow-md">
+              <CardHeader>
+                <CardTitle>내 프로젝트</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Project Title</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Deadline</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {myProjects?.map((project) => (
+                        <TableRow key={project.project.id}>
+                          <TableCell>
+                            {project.project.project_name}
+                          </TableCell>
+                          <TableCell>{project.project.status}</TableCell>
+                          <TableCell>
+                            {new Date(project.project.end_date).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                router.push(
+                                  `/project/projectdetail/${project.project.id}`
+                                )
+                              }
+                            >
+                              상세 보기
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

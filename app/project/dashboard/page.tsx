@@ -158,44 +158,48 @@ export default function Dashboard() {
         </div>
 
         {/* 내 프로젝트 섹션 */}
-        <div className="p-4">
-          <Card className="w-full rounded-lg shadow-md">
-            <CardHeader>
-              <CardTitle>내 프로젝트</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Project Title</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Deadline</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {myProjects?.map((project) => (
-                      <TableRow key={project.project.id}>
-                        <TableCell>{project.project.project_name}</TableCell>
-                        <TableCell>{project.project.status}</TableCell>
-                        <TableCell>{new Date(project.project.end_date).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                          <Button
-                            size="sm"
-                            onClick={() => router.push(`/project/projectdetail/${project.project.id}`)}
-                          >
-                            상세 보기
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+{/* 내 프로젝트 섹션 */}
+<div className="p-4">
+  <Card className="w-full rounded-lg shadow-md">
+    <CardHeader>
+      <CardTitle>내 프로젝트</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Project Title</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Deadline</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {myProjects?.map((project) => (
+              <TableRow key={project.project.id}>
+                <TableCell>{project.project.project_name}</TableCell>
+                <TableCell>{project.project.status}</TableCell>
+                <TableCell>
+                  {new Date(project.project.end_date).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    onClick={() => router.push(`/project/projectdetail/${project.project.id}`)}
+                  >
+                    상세 보기
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
       </div>
     </div>
   );
