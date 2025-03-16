@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,54 +14,60 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAccount } from "wagmi";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { RegisterDto } from '@/lib/api/generated/Api';
+
+// 응답 타입 정의
+interface RegisterResponse {
+  id: string;
+  name: string;
+  studentNumber: number;
+  department: string;
+  walletAddress: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function Signup() {
   const { address } = useAccount();
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
+    setError(null);
+    setIsLoading(true);
 
-    console.log("폼 제출됨");
-
-    // FormData로 입력값 가져오기
     const formData = new FormData(event.currentTarget);
-    const data = {
-      username: formData.get("username") as string,
-      fullName: "Jiho",
+    const data: RegisterDto = {
+      name: formData.get("username") as string,
+      studentNumber: formData.get("studentId") as unknown as number,
       department: formData.get("department") as string,
-      walletAddress: "0x223456789012345678901234567890123456787",
-      studentId: formData.get("studentId") as string,
+      walletAddress: address || '',
     };
 
-    alert("로그인 성공");
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    console.log("전송 데이터:", data);
+      if (!response.ok) {
+        throw new Error('회원가입 실패');
+      }
 
-    // try {
-    //   const response = await fetch("http://localhost:3001/auth/register", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("서버 응답 에러");
-    //   }
-
-    //   const result = await response.json();
-    //   console.log("서버 응답:", result);
-    //   alert("회원가입 성공!");
-    // } catch (error) {
-    //   console.error("회원가입 실패:", error);
-    //   alert("회원가입 실패!");
-    // } finally {
-    //   setLoading(false);
-    // }
+      alert("회원가입 성공!");
+      router.push('/signin');
+    } catch (err) {
+      console.error("회원가입 실패:", err);
+      setError(err as Error);
+      alert(`회원가입 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -73,7 +78,7 @@ export default function Signup() {
           <CardDescription>Create an account to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="username">이름</Label>
@@ -81,6 +86,7 @@ export default function Signup() {
                   name="username"
                   id="username"
                   placeholder="이름을 입력하세요"
+                  required
                 />
               </div>
 
@@ -90,6 +96,7 @@ export default function Signup() {
                   name="studentId"
                   id="studentId"
                   placeholder="학번을 입력하세요"
+                  required
                 />
               </div>
 
@@ -99,19 +106,30 @@ export default function Signup() {
                   name="department"
                   id="department"
                   placeholder="학과를 입력하세요"
+                  required
                 />
               </div>
 
               <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
+                <Checkbox id="terms" required />
                 <Label htmlFor="terms" className="text-sm">
                   I accept terms and conditions
                 </Label>
               </div>
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              Sign up
+            <Button 
+              type="submit" 
+              className="w-full mt-4" 
+              disabled={isLoading || !address}
+            >
+              {isLoading ? "Processing..." : "Sign up"}
             </Button>
+            
+            {error && (
+              <p className="text-red-500 text-sm text-center mt-2">
+                {error.message}
+              </p>
+            )}
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">

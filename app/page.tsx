@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CarouselComponent from "@/components/CarouselComponent";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import {
@@ -11,11 +11,19 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { getAccessToken } from "@/utils/auth";
 
 export default function Home() {
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const currentToken = getAccessToken();
+    setToken(currentToken);
+  }, []);
+
   const images = [
     {
-      src: "https://imgur.com/FUy6dyL.jpg",
+      src: "https://i.imgur.com/FUy6dyL.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">블루노드 정규 세션</div>
@@ -24,7 +32,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/1rf5guF.jpg",
+      src: "https://i.imgur.com/1rf5guF.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">
@@ -35,7 +43,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/y02IRK4.jpg",
+      src: "https://i.imgur.com/y02IRK4.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">2025 KOBAC BlueNode</div>
@@ -44,7 +52,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/08xTbmI.jpg",
+      src: "https://i.imgur.com/08xTbmI.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">Scroll 오픈세션</div>
@@ -53,7 +61,7 @@ export default function Home() {
       ),
     },
     {
-      src: "https://imgur.com/slfIvqa.jpg",
+      src: "https://i.imgur.com/slfIvqa.jpg",
       text: (
         <>
           <div className="text-2xl font-bold">블루노드 방학 세션</div>
@@ -158,6 +166,26 @@ export default function Home() {
                 ))}
               </TableBody>
             </Table>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center">현재 로그인 상태</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              {token ? (
+                <>
+                  <p className="text-green-600 font-semibold mb-2">로그인 되어 있음</p>
+                  <p className="text-sm text-gray-600 break-all">{token}</p>
+                </>
+              ) : (
+                <p className="text-red-500">로그인이 필요합니다</p>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

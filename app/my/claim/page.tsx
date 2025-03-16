@@ -26,6 +26,9 @@ import {
   BarElement,
   Tooltip,
   Legend,
+  TooltipItem,
+  Scale,
+  CoreScaleOptions,
 } from "chart.js";
 import { useState, useEffect } from "react";
 import { useReadContract, useWriteContract, useAccount } from "wagmi";
@@ -34,11 +37,74 @@ import BNS_ABI from "@/abi/IBND.abi";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
+interface ClaimData {
+  id: string;
+  amount: string | number;
+  status: string;
+  timestamp: string;
+  // 필요한 다른 필드들 추가
+}
+
+interface ClaimTransaction {
+  id: string;
+  amount: string | number;
+  status: string;
+  timestamp: string;
+  transactionHash?: string;
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: string;
+}
+
+interface ClaimEventData {
+  claimId: string;
+  amount: string;
+  timestamp: number;
+  status: string;
+}
+
+interface ClaimEventHandler {
+  type: string;
+  payload: {
+    claimId: string;
+    amount: string;
+    status: string;
+  };
+}
+
+interface ClaimEventResponse {
+  type: string;
+  data: {
+    claimId: string;
+    amount: string;
+    status: string;
+    timestamp: number;
+  };
+}
+
 interface UserInfo {
-  addr: string;
+  address: string;
   score: number;
-  isValidator: boolean;
-  isReporter: boolean;
+  // 필요한 다른 필드들
+}
+
+interface ClaimResponse {
+  success: boolean;
+  transaction?: {
+    wait: () => Promise<{
+      status: number;
+      transactionHash: string;
+    }>;
+  };
+}
+
+interface ReadContractResponse {
+  data: [string, bigint] | undefined; 
+  isError: boolean;
+  isLoading: boolean;
 }
 
 const Dashboard = () => {
@@ -56,26 +122,12 @@ const Dashboard = () => {
   const { writeContract } = useWriteContract();
   const [score, setScore] = useState<number | null>(null);
 
-  const handleClaim = async () => {
-    try {
-      console.log("Initiating deposit with amount:");
-      await writeContract({
-        abi: BNS_ABI,
-        address: "0xA499CaD0aBc424A6E6770871647BdEe4e9777D8C",
-        functionName: "claim",
-        args: [address],
-      });
-    } catch (error) {
-      console.error("Error during deposit:", error);
-    }
-  };
-
   const { data: userInfo } = useReadContract({
     address: "0xA499CaD0aBc424A6E6770871647BdEe4e9777D8C",
     abi: BNS_ABI,
     functionName: "users",
     args: [address],
-  }) as { data: any[] | undefined }; 
+  }) as ReadContractResponse;
 
   useEffect(() => {
     if (userInfo && Array.isArray(userInfo)) {
@@ -144,28 +196,100 @@ const Dashboard = () => {
     ],
   };
 
-  const chartOptions = {
+  // 차트 옵션 설정
+  const options = {
     responsive: true,
-    maintainAspectRatio: false, // 카드 크기 내에서 유지되도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
-        position: "top",
+        position: "top" as const,
       },
       tooltip: {
         callbacks: {
-          label: (context) => `$${context.raw.toLocaleString()}`,
+          label: function(tooltipItem: TooltipItem<"bar">) {
+            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+          },
         },
       },
     },
     scales: {
       y: {
+        type: 'linear' as const,
         beginAtZero: true,
         ticks: {
-          callback: (value) => `$${value.toLocaleString()}`,
+          callback: function(value: number | string) {
+            return typeof value === 'number' ? `${value}` : value;
+          },
         },
       },
     },
+  };
+
+  const handleClaim = async (data: ClaimData): Promise<ClaimResponse> => {
+    try {
+      console.log("Initiating claim with data:", data);
+      const result = await writeContract({
+        abi: BNS_ABI,
+        address: "0xA499CaD0aBc424A6E6770871647BdEe4e9777D8C",
+        functionName: "claim",
+        args: [address],
+      });
+      
+      console.log("Claim successful:", result);
+      
+      return {
+        success: true,
+        transaction: {
+          wait: async () => {
+            return {
+              status: 1, // 성공 상태
+              transactionHash: result as unknown as string
+            };
+          }
+        }
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Claim error:", error.message);
+      }
+      return {
+        success: false
+      };
+    }
+  };
+
+  const handleClaimSubmit = async (claimData: ClaimTransaction) => {
+    try {
+      const response: ClaimResponse = await handleClaim(claimData);
+      if (response.success) {
+        // 처리 로직
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Claim error:', error.message);
+      }
+    }
+  };
+
+  const processTransaction = async (transaction: ClaimResponse['transaction']) => {
+    if (!transaction) return;
+    try {
+      const receipt = await transaction.wait();
+      // 처리 로직
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Transaction error:', error.message);
+      }
+    }
+  };
+
+  const handleEvent = (event: ClaimEventHandler) => {
+    // ... 기존 로직
+  };
+
+  const handleClaimResponse = (response: ClaimEventResponse) => {
+    // ... 기존 로직
   };
 
   return (
@@ -253,7 +377,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="relative h-64">
-              <Bar data={chartData} options={chartOptions} />
+              <Bar data={chartData} options={options} />
             </div>
           </CardContent>
         </Card>
@@ -302,7 +426,7 @@ const Dashboard = () => {
         {/* Claim Button */}
         <Button 
         className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-lg"
-        onClick={handleClaim}
+        onClick={() => handleClaim({ id: "", amount: 0, status: "", timestamp: "" } as ClaimData)}
         >
           Claim
         </Button>

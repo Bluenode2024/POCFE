@@ -1,203 +1,267 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePost, useGet } from "@/hooks/useRequest";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
+// API 요청 타입 정의
+interface User {
+  id: string;
+  name: string;
+  // ... 다른 유저 필드들
+}
+
+interface CreateProjectDto {
+  project_name: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  members: {
+    member_name: string;
+    role: 'leader' | 'designer' | 'developer';
+  }[];
+  repo_link: string[];
+}
+
+// API 응답 타입 정의
+interface ProjectResponse {
+  id: number;
+  project_name: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  members: {
+    member_name: string;
+    role: string;
+  }[];
+  repo_link: string[];
+  created_at: string;
+  updated_at: string;
+}
+
 export default function Generate() {
-  const [loading, setLoading] = useState(false);
-  const [tasks, setTasks] = useState([
-    { title: "", description: "", contributeScore: "" },
-  ]);
-  const [members, setMembers] = useState<string[]>([]);
-  const [selectedMember, setSelectedMember] = useState("");
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const router = useRouter();
+  const { postData, isLoading, error } = usePost<ProjectResponse, CreateProjectDto>();
+  const { data: users, fetchData: fetchUsers } = useGet<User[]>();
+  const [members, setMembers] = useState<CreateProjectDto['members']>([]);
+  const [repoLinks, setRepoLinks] = useState<string[]>(['']);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedRole, setSelectedRole] = useState<'leader' | 'designer' | 'developer'>('developer');
 
-  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(event.currentTarget);
-    const data = {
-      title: formData.get("title") as string,
-      description: formData.get("Description") as string,
-      startDate,
-      endDate,
-      members,
-      tasks: tasks.map((task, index) => ({
-        title: formData.get(`task_title_${index}`) as string,
-        description: formData.get(`task_description_${index}`) as string,
-        contributeScore: formData.get(
-          `task_contributeScore_${index}`
-        ) as string,
-      })),
-    };
-    alert("프로젝트가 성공적으로 생성되었습니다!");
-    // try {
-    //   const response = await fetch(
-    //     "http://localhost:3001/projects/createProject",
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(data),
-    //     }
-    //   );
-
-    //   if (!response.ok) {
-    //     throw new Error("서버 응답 에러");
-    //   }
-
-    //   const result = await response.json();
-    //   alert("프로젝트가 성공적으로 생성되었습니다!");
-    // } catch (error) {
-    //   alert("프로젝트 생성에 실패했습니다. 다시 시도해주세요.");
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
+  useEffect(() => {
+    fetchUsers('/users');
+  }, []);
 
   const handleAddMember = () => {
-    if (selectedMember && !members.includes(selectedMember)) {
-      setMembers([...members, selectedMember]);
-      setSelectedMember("");
+    if (selectedUser && selectedRole && users) {
+      const selectedUserData = users.find(user => user.id === selectedUser);
+      if (selectedUserData) {
+        setMembers([...members, {
+          member_name: selectedUserData.name,
+          role: selectedRole
+        }]);
+        setSelectedUser('');
+        setSelectedRole('developer');
+      }
     }
   };
 
-  const memberOptions = [
-    "김재원",
-    "이재원",
-    "최세창",
-    "정원필",
-    "박지호",
-    "김승원",
-    "안성진",
-  ];
+  const handleAddRepoLink = () => {
+    setRepoLinks([...repoLinks, '']);
+  };
+
+  const handleRepoLinkChange = (index: number, value: string) => {
+    const newLinks = [...repoLinks];
+    newLinks[index] = value;
+    setRepoLinks(newLinks);
+  };
+
+  const handleRemoveRepoLink = (index: number) => {
+    setRepoLinks(repoLinks.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const projectData: CreateProjectDto = {
+      project_name: formData.get("project_name") as string,
+      description: formData.get("description") as string,
+      start_date: formData.get("start_date") as string,
+      end_date: formData.get("end_date") as string,
+      members: members,
+      repo_link: repoLinks.filter(link => link.trim() !== '')
+    };
+
+    try {
+      await postData('/projects', projectData);
+      alert("프로젝트가 성공적으로 생성되었습니다!");
+      router.push('/project/dashboard');
+    } catch (error) {
+      console.error('프로젝트 생성 실패:', error);
+      alert('프로젝트 생성에 실패했습니다.');
+    }
+  };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleRegister}
-        className="w-full max-w-md p-6 bg-white rounded-lg shadow-md"
-      >
-        <h1 className="text-xl font-semibold text-center mb-6">
-          Create a Project
-        </h1>
-        <div className="grid gap-4">
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="title">Project Title</Label>
-            <Input
-              name="title"
-              id="title"
-              placeholder="프로젝트 제목을 입력하세요"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="Description">Project Description</Label>
-            <Textarea placeholder="Write project detail here..." />
-          </div>
-
-          <div className="flex flex-col space-y-1.5">
-            <Label>Project Duration</Label>
-            <div className="flex items-center space-x-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full">
-                    {startDate ? startDate.toLocaleDateString() : "Start Date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="start">
-                  <Calendar
-                    mode="single"
-                    selected={startDate}
-                    onSelect={(date) => setStartDate(date || undefined)}
-                  />
-                </PopoverContent>
-              </Popover>
-
-              <span className="text-gray-500">~</span>
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full">
-                    {endDate ? endDate.toLocaleDateString() : "End Date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="start">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    onSelect={(date) => setEndDate(date || undefined)}
-                  />
-                </PopoverContent>
-              </Popover>
+    <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50 p-4">
+      <Card className="w-[800px]">
+        <CardHeader>
+          <CardTitle>프로젝트 생성</CardTitle>
+          <CardDescription>새로운 프로젝트를 생성합니다.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="project_name">프로젝트 이름</Label>
+              <Input
+                id="project_name"
+                name="project_name"
+                placeholder="프로젝트 이름을 입력하세요"
+                required
+              />
             </div>
-          </div>
 
-          <div className="flex flex-col space-y-1.5">
-            <Label>Project Members</Label>
-            <div className="flex items-center justify-center space-x-4">
-              <Select onValueChange={setSelectedMember}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a Member" />
-                </SelectTrigger>
-                <SelectContent>
-                  {memberOptions.map((member) => (
-                    <SelectItem key={member} value={member}>
-                      {member}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                size="sm"
-                onClick={handleAddMember}
-                type="button"
-              >
-                멤버 추가
+            <div className="space-y-2">
+              <Label htmlFor="description">프로젝트 설명</Label>
+              <Textarea
+                id="description"
+                name="description"
+                placeholder="프로젝트 설명을 입력하세요"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="start_date">시작일</Label>
+                <Input
+                  id="start_date"
+                  name="start_date"
+                  type="date"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="end_date">종료일</Label>
+                <Input
+                  id="end_date"
+                  name="end_date"
+                  type="date"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <Label>멤버 추가</Label>
+              <div className="flex gap-2">
+                <Select
+                  value={selectedUser}
+                  onValueChange={setSelectedUser}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="멤버 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users?.map((user) => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={selectedRole}
+                  onValueChange={(value: 'leader' | 'designer' | 'developer') => setSelectedRole(value)}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="역할 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="leader">Leader</SelectItem>
+                    <SelectItem value="designer">Designer</SelectItem>
+                    <SelectItem value="developer">Developer</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button type="button" onClick={handleAddMember}>추가</Button>
+              </div>
+
+              {members.length > 0 && (
+                <div className="space-y-2">
+                  <Label>추가된 멤버</Label>
+                  <div className="space-y-2">
+                    {members.map((member, index) => (
+                      <div key={index} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
+                        <span>{member.member_name} ({member.role})</span>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => {
+                            setMembers(members.filter((_, i) => i !== index));
+                          }}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <Label>Repository 링크</Label>
+              {repoLinks.map((link, index) => (
+                <div key={index} className="flex gap-2">
+                  <Input
+                    placeholder="Repository URL"
+                    value={link}
+                    onChange={(e) => handleRepoLinkChange(index, e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => handleRemoveRepoLink(index)}
+                  >
+                    삭제
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" onClick={handleAddRepoLink}>
+                Repository 추가
               </Button>
             </div>
-            <div className="mt-2">
-              {members.map((member, index) => (
-                <span
-                  key={index}
-                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2"
-                >
-                  {member}
-                </span>
-              ))}
-            </div>
-          </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            "프로젝트 생성"
-          </Button>
-        </div>
-      </form>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "생성 중..." : "프로젝트 생성"}
+            </Button>
+            {error && (
+              <p className="text-red-500 text-sm mt-2">{error.message}</p>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

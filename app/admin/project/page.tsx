@@ -1,47 +1,73 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableHeader,
+} from "@/components/ui/table";
+import { useGet } from "@/hooks/useRequest";
+import { isAuthenticated } from "@/utils/auth";
 
-import { useState } from "react";
-import { pendingColumns } from "../../column";
-import { DataTable } from "../../data-table";
-import { projects as testProjects } from "../../../projects/index";
+interface Project {
+  id: number;
+  project_name: string;
+  description: string;
+  end_date: string;
+  leader_id: string;
+  status: string;
+}
 
-export default function AdminProjectDetail() {
-  const [projects, setProjects] = useState(testProjects);
-  const handleAccept = (id: string) => {
-    setProjects((prev) =>
-      prev.map((project) =>
-        project.id === id
-          ? {
-              ...project,
-              start_date: new Date().toISOString(), // 현재 시각으로 start_date 수정
-              status: "Processing", // 상태를 Processing으로 변경
-            }
-          : project
-      )
-    );
-  };
+interface MyProject {
+  project: Project;
+}
 
-  const handleReject = (id: string) => {
-    const rejectionReason = prompt("Enter rejection reason:");
-    if (!rejectionReason) return;
+export default function Dashboard() {
+  const router = useRouter();
+  const { data: pendingProjects, fetchData: fetchPending } = useGet<Project[]>();
+  const { data: myProjects, fetchData: fetchMyProject } = useGet<MyProject[]>();
+  const [isLoading, setIsLoading] = useState(true);
 
-    setProjects((prev) =>
-      prev.map((project) =>
-        project.id === id
-          ? {
-              ...project,
-              rejection_reason: rejectionReason,
-              status: "Rejected",
-            }
-          : project
-      )
-    );
-  };
-  const pendingProjects = projects.filter(
-    (project) => project.status === "Pending"
-  );
+  const loadData = useCallback(async () => {
+    try {
+      console.log('Fetching pending projects...');
+      await fetchPending('/projects/status/pending');
+      
+      console.log('Fetching my projects...');
+      await fetchMyProject('/projects/myproject');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/signin');
+      return;
+    }
+    loadData();
+  }, []); 
+
+  useEffect(() => {
+    console.log('Pending Projects:', pendingProjects);
+    console.log('My Projects:', myProjects);
+  }, [pendingProjects, myProjects]);
+
+  if (!isAuthenticated()) {
+    return null;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen bg-gray-50">
@@ -49,38 +75,41 @@ export default function AdminProjectDetail() {
         <div className="p-4">
           <Card className="w-full rounded-lg shadow-md">
             <CardHeader>
-              <CardTitle>Pending Project</CardTitle>
+              <CardTitle>Pending Projects</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataTable
-                columns={[
-                  ...pendingColumns,
-                  {
-                    accessorKey: "actions",
-                    header: "Actions",
-                    cell: ({ row }) => (
-                      <div className="flex gap-2">
-                        <button
-                          className="px-2 py-1 bg-green-500 text-white rounded"
-                          onClick={() => handleAccept(row.original.id)}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="px-2 py-1 bg-red-500 text-white rounded"
-                          onClick={() => handleReject(row.original.id)}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    ),
-                  },
-                ]}
-                data={pendingProjects}
-              />
+              <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Project Title</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Deadline</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {pendingProjects?.map((project) => (
+                      <TableRow key={project.id}>
+                        <TableCell>{project.project_name}</TableCell>
+                        <TableCell>{project.status}</TableCell>
+                        <TableCell>{new Date(project.end_date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            onClick={() => router.push(`/project/projectdetail/${project.id}`)}
+                          >
+                            상세 보기
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
-        </div>
+        </div>        
       </div>
     </div>
   );

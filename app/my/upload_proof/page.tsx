@@ -28,6 +28,7 @@ import {
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from 'next/image';
 
 const ValidateProofPage = () => {
   const [selectedTask, setSelectedTask] = useState<ProjectTask | null>(null);
@@ -93,9 +94,11 @@ const ValidateProofPage = () => {
                           />
                           {proof && (
                             <div className="mt-2">
-                              <img
+                              <Image
                                 src={proof}
                                 alt="Proof Preview"
+                                width={200}
+                                height={200}
                                 className="max-w-full h-auto border rounded-md"
                               />
                             </div>

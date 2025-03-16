@@ -13,12 +13,26 @@ import {
   TableHeader,
 } from "@/components/ui/table";
 import { tasks } from "@/task/index";
+import { useState } from "react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import Image from 'next/image';
+
+interface Project {
+  id: number;
+  project_name: string;
+  description: string;
+  end_date: string;
+  leader_id: string;
+  status: string;
+}
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const projectId = Array.isArray(id) ? id[0] : id;
 
   const username = "박지호";
+
+  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([]);
 
   if (!projectId) {
     return (
